@@ -1,6 +1,8 @@
 package com.github.clevernucleus.playerex.api.client;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
@@ -23,7 +25,14 @@ public class Page extends Screen {
 	 * @return The protected button list as public.
 	 */
 	public List<AbstractWidget> getButtonList() {
-		return this.buttons;
+		List<AbstractWidget> out = new ArrayList<>();
+		this.renderables.forEach((a) -> {
+			if (a instanceof AbstractWidget){
+				out.add((AbstractWidget) a);
+			}
+		});
+
+		return out;
 	}
 	
 	/**

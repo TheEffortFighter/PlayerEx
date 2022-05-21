@@ -1,32 +1,33 @@
 package com.github.clevernucleus.playerex.init.capability;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
-
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.HashMultimap;
-import com.google.common.collect.Multimap;
-
 import com.github.clevernucleus.playerex.api.attribute.IPlayerAttribute;
 import com.github.clevernucleus.playerex.api.attribute.IPlayerAttributes;
 import com.github.clevernucleus.playerex.api.attribute.PlayerAttributes;
 import com.github.clevernucleus.playerex.init.Registry;
 import com.github.clevernucleus.playerex.util.CommonConfig;
-
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.AttributeMap;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier.Builder;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.nbt.ListTag;
-import net.minecraftforge.fml.network.NetworkDirection;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.INBTSerializable;
+import net.minecraftforge.network.NetworkDirection;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * Capability implementation (object).

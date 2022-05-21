@@ -1,18 +1,17 @@
 package com.github.clevernucleus.playerex.client.gui;
 
-import java.util.List;
-import java.util.function.BiFunction;
-
-import org.lwjgl.opengl.GL11;
-
-import com.mojang.blaze3d.vertex.PoseStack;
-
 import com.github.clevernucleus.playerex.api.ExAPI;
 import com.github.clevernucleus.playerex.api.attribute.IPlayerAttributes;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.fml.client.gui.GuiUtils;
+import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.client.gui.GuiUtils;
+import org.lwjgl.opengl.GL11;
+
+import java.util.List;
+import java.util.function.BiFunction;
 
 public class DynamicTextComponent {
 	private final float scale = 0.7F;
@@ -48,7 +47,7 @@ public class DynamicTextComponent {
 		
 		ExAPI.playerAttributes(par2).ifPresent(var -> {
 			if(isHovered(par5, par6, var0 + (int)(this.posX * this.scale), var1 + (int)(this.posY * this.scale), (int)(par1.width(this.titleText.apply(par2, var)) * this.scale), 7)) {
-				GuiUtils.drawHoveringText(par0, this.hoverText.apply(par2, var), par5, par6, par3, par4, -1, par1);
+				// GuiUtils.drawHoveringText(par0, this.hoverText.apply(par2, var), par5, par6, par3, par4, -1, par1);// TODO
 			}
 		});
 	}

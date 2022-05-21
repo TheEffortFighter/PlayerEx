@@ -5,6 +5,7 @@ import javax.annotation.Nullable;
 
 import com.github.clevernucleus.playerex.api.ExAPI;
 import com.github.clevernucleus.playerex.api.attribute.IPlayerAttributes;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
@@ -25,14 +26,14 @@ public class CapabilityProvider implements ICapabilitySerializable<Tag> {
     public <T> LazyOptional<T> getCapability(@Nullable Capability<T> par0, Direction par1) {
     	return ExAPI.PLAYER_ATTRIBUTES.orEmpty(par0, optional);
     }
-    
+
     @Override
     public Tag serializeNBT() {
-    	return ExAPI.PLAYER_ATTRIBUTES.writeNBT(data, null);
+		return data.write();
     }
-    
+
     @Override
     public void deserializeNBT(Tag par0) {
-    	ExAPI.PLAYER_ATTRIBUTES.readNBT(data, null, par0);
+		data.read((CompoundTag) par0);
     }
 }

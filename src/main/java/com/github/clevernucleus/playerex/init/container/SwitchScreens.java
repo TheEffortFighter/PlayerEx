@@ -1,11 +1,11 @@
 package com.github.clevernucleus.playerex.init.container;
 
-import java.util.function.Supplier;
-
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.fml.network.NetworkEvent;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.network.NetworkHooks;
+
+import java.util.function.Supplier;
 
 /**
  * Network packet responsible for switching between the player's default inventory and the player elements inventory.

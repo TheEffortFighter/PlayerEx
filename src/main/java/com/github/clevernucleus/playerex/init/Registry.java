@@ -1,33 +1,26 @@
 package com.github.clevernucleus.playerex.init;
 
-import javax.annotation.Nonnull;
-
 import com.github.clevernucleus.playerex.api.ExAPI;
 import com.github.clevernucleus.playerex.api.Util;
 import com.github.clevernucleus.playerex.api.attribute.IPlayerAttribute;
 import com.github.clevernucleus.playerex.api.attribute.IPlayerAttributes;
 import com.github.clevernucleus.playerex.api.attribute.PlayerAttributes;
 import com.github.clevernucleus.playerex.init.capability.AddPlayerAttributes;
-import com.github.clevernucleus.playerex.init.capability.AttributesCapability;
 import com.github.clevernucleus.playerex.init.capability.SyncPlayerAttributes;
 import com.github.clevernucleus.playerex.init.container.PlayerAttributesContainer;
 import com.github.clevernucleus.playerex.init.container.SwitchScreens;
 import com.github.clevernucleus.playerex.util.CommonConfig;
-
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.CapabilityManager;
-import net.minecraftforge.common.extensions.IForgeContainerType;
+import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.network.NetworkRegistry;
-import net.minecraftforge.fml.network.simple.SimpleChannel;
+import net.minecraftforge.network.NetworkRegistry;
+import net.minecraftforge.network.simple.SimpleChannel;
+
+import javax.annotation.Nonnull;
 
 @Mod.EventBusSubscriber(modid = ExAPI.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class Registry {
@@ -36,18 +29,11 @@ public class Registry {
 	public static final SimpleChannel NETWORK = NetworkRegistry.newSimpleChannel(new ResourceLocation(ExAPI.MODID, "path"), () -> "1", "1"::equals, "1"::equals);
 	
 	/** Static identifier for the player elements container type. */
-	public static final MenuType<PlayerAttributesContainer> ATTRIBUTES_CONTAINER = register("attributes", IForgeContainerType.create((var0, var1, var2) -> new PlayerAttributesContainer(var0, var1)));
-	
-	/**
-	 * Used to pass a container type and its registry name through to a list and returned again.
-	 * @param par0 The registry name.
-	 * @param par1 The container type object.
-	 * @return The container type object, with its registry name set.
-	 */
-	private static <T extends AbstractContainerMenu> MenuType<T> register(final @Nonnull String par0, MenuType<T> par1) {
-		par1.setRegistryName(new ResourceLocation(ExAPI.MODID, par0));
-		
-		return par1;
+	public static MenuType<PlayerAttributesContainer> ATTRIBUTES_CONTAINER;
+
+	@SubscribeEvent
+	public static void capSetup(final RegisterCapabilitiesEvent event) {
+		event.register(IPlayerAttributes.class);
 	}
 	
 	/**
@@ -56,19 +42,6 @@ public class Registry {
 	 */
 	@SubscribeEvent
 	public static void commonSetup(final net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent par0) {
-		CapabilityManager.INSTANCE.register(IPlayerAttributes.class, new Capability.IStorage<IPlayerAttributes>() {
-			
-			@Override
-			public Tag writeNBT(Capability<IPlayerAttributes> par0, IPlayerAttributes par1, Direction par2) {
-				return par1.write();
-			}
-			
-			@Override
-			public void readNBT(Capability<IPlayerAttributes> par0, IPlayerAttributes par1, Direction par2, Tag par3) {
-				par1.read((CompoundTag)par3);
-			}
-		}, AttributesCapability::new);
-		
 		NETWORK.registerMessage(0, SwitchScreens.class, SwitchScreens::encode, SwitchScreens::decode, SwitchScreens::handle);
 		NETWORK.registerMessage(1, SyncPlayerAttributes.class, SyncPlayerAttributes::encode, SyncPlayerAttributes::decode, SyncPlayerAttributes::handle);
 		NETWORK.registerMessage(2, AddPlayerAttributes.class, AddPlayerAttributes::encode, AddPlayerAttributes::decode, AddPlayerAttributes::handle);
@@ -161,6 +134,8 @@ public class Registry {
 	 */
 	@SubscribeEvent
 	public static void registerContainerTypes(final net.minecraftforge.event.RegistryEvent.Register<MenuType<?>> par0) {
+		ATTRIBUTES_CONTAINER = new MenuType<>(PlayerAttributesContainer::new);
+		ATTRIBUTES_CONTAINER.setRegistryName(new ResourceLocation(ExAPI.MODID, "attributes"));
 		par0.getRegistry().register(ATTRIBUTES_CONTAINER);
 	}
 }

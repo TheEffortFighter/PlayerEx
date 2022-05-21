@@ -1,14 +1,13 @@
 package com.github.clevernucleus.playerex.init.capability;
 
-import java.util.function.Supplier;
-
-import javax.annotation.Nonnull;
-
 import com.github.clevernucleus.playerex.PlayerEx;
 import com.github.clevernucleus.playerex.api.ExAPI;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.network.NetworkEvent;
+
+import javax.annotation.Nonnull;
+import java.util.function.Supplier;
 
 /**
  * Network packet responsible for syncing server entity display data to the client.

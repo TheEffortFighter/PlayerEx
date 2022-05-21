@@ -350,7 +350,7 @@ public class DefaultPage extends Page {
 		Player var0 = this.minecraft.player;
 		
 		ExAPI.playerAttributes(var0).ifPresent(var -> {
-			for(AbstractWidget var1 : this.buttons) {
+			for(AbstractWidget var1 : this.getButtonList()) {
 				if(var1 instanceof TexturedButton) {
 					TexturedButton var2 = (TexturedButton)var1;
 					int var3 = var2.getAdditionalData();
@@ -370,7 +370,7 @@ public class DefaultPage extends Page {
 		super.init(par0);
 		
 		for(int var = 0; var < this.idToAttribute.length; var++) {
-			this.addButton(new TexturedButton(par0, 8, 58 + (17 * var), 11, 10, 204, 0, var, (var0, var1) -> {
+			this.addWidget(new TexturedButton(par0, 8, 58 + (17 * var), 11, 10, 204, 0, var, (var0, var1) -> {
 				Registry.NETWORK.sendToServer(new AddPlayerAttributes(Pair.of(this.idToAttribute[var1], 1.0F), Pair.of(PlayerAttributes.SKILLPOINTS, -1.0F)));
 			}));
 		}

@@ -1,9 +1,12 @@
 package com.github.clevernucleus.playerex.client.gui;
 
 import java.text.DecimalFormat;
-import java.util.Set;
+import java.util.*;
 import java.util.function.BiFunction;
 
+import net.minecraftforge.client.event.ScreenEvent;
+import net.minecraftforge.client.gui.ForgeIngameGui;
+import net.minecraftforge.client.gui.IIngameOverlay;
 import org.lwjgl.opengl.GL11;
 
 import com.github.clevernucleus.playerex.api.ExAPI;
@@ -42,8 +45,9 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = ExAPI.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
 public class ClientEventHandler {
-	private static final Set<ElementType> UTILS_BAR = Sets.immutableEnumSet(ElementType.EXPERIENCE, ElementType.JUMPBAR, ElementType.ARMOR, ElementType.FOOD, ElementType.AIR);
-	private static final Set<ElementType> HEALTH_BAR = Sets.immutableEnumSet(ElementType.HEALTH, ElementType.HEALTHMOUNT);
+	public static final Set<IIngameOverlay> UTILS_BAR = new HashSet<>(Arrays.asList(ForgeIngameGui.EXPERIENCE_BAR_ELEMENT, ForgeIngameGui.JUMP_BAR_ELEMENT, ForgeIngameGui.ARMOR_LEVEL_ELEMENT, ForgeIngameGui.FOOD_LEVEL_ELEMENT, ForgeIngameGui.AIR_LEVEL_ELEMENT));
+	public static final Set<IIngameOverlay> HEALTH_BAR = new HashSet<>(Arrays.asList(ForgeIngameGui.MOUNT_HEALTH_ELEMENT, ForgeIngameGui.PLAYER_HEALTH_ELEMENT));
+
 	private static final BiFunction<String, Float, String> FORMAT = (par0, par1) -> (new DecimalFormat(par0)).format(par1);
 	
 	private static boolean isRidingJumpable(LocalPlayer par0) {
@@ -95,7 +99,7 @@ public class ClientEventHandler {
 		if(par2) {
 			int var2 = (int)(78F / var0.getMaxHealth() * var0.getHealth());
 			
-			par1.getTextureManager().bind(PlayerAttributesScreen.GUI);
+			par1.getTextureManager().bindForSetup(PlayerAttributesScreen.GUI);
 			par1.gui.blit(par0, (varX / 2) - 91, varY - 37, 0, 181, 78, 8);
 			par1.gui.blit(par0, (varX / 2) - 91, varY - 37, 0, healthLat(var0), var2, 8);
 			
@@ -107,12 +111,15 @@ public class ClientEventHandler {
 		
 		int var4 = (varX - var2.width(var3)) / 2;
 		
-		GL11.glPushMatrix();
-		GL11.glScalef(0.8F, 0.8F, 0.8F);
+		//GL11.glPushMatrix();
+		// GL11.glScalef(0.8F, 0.8F, 0.8F);
+		par0.pushPose();
+		par0.scale(0.8F, 0.8F, 0.8F);
 		
 		var2.draw(par0, var3, 1.25F * (var4 - 48), 1.25F * (varY - 36F), 0xFFFFFF);//0x000066); TODO WHEN FROSTY
 		
-		GL11.glPopMatrix();
+		//GL11.glPopMatrix();
+		par0.popPose();
 	}
 	
 	private static void drawRidingHealthBar(PoseStack par0, Minecraft par1, boolean par2) {
@@ -134,7 +141,7 @@ public class ClientEventHandler {
 			if(par2) {
 				int var4 = (int)(78F / var3.getMaxHealth() * var3.getHealth());
 				
-				par1.getTextureManager().bind(PlayerAttributesScreen.GUI);
+				par1.getTextureManager().bindForSetup(PlayerAttributesScreen.GUI); // TODO??
 				par1.gui.blit(par0, (varX / 2) + 13, varY - 37, 0, 181, 78, 8);
 				par1.gui.blit(par0, (varX / 2) + 13, varY - 37, 0, 189, var4, 8);
 				
@@ -146,12 +153,15 @@ public class ClientEventHandler {
 			
 			int var6 = (varX - var4.width(var5)) / 2;
 			
-			GL11.glPushMatrix();
-			GL11.glScalef(0.8F, 0.8F, 0.8F);
+			// GL11.glPushMatrix();
+			// GL11.glScalef(0.8F, 0.8F, 0.8F);
+			par0.pushPose();
+			par0.scale(0.8F, 0.8F, 0.8F);
 			
 			var4.draw(par0, var5, 1.25F * (var6 + 55), 1.25F * (varY - 36F), 0xFFFFFF);
 			
-			GL11.glPopMatrix();
+			// GL11.glPopMatrix();
+			par0.popPose();
 		}
 	}
 	
@@ -168,7 +178,7 @@ public class ClientEventHandler {
 		
 		Entity var2 = var0.getVehicle();
 		
-		par1.getTextureManager().bind(PlayerAttributesScreen.GUI);
+		par1.getTextureManager().bindForSetup(PlayerAttributesScreen.GUI); // TODO??
 		par1.gui.blit(par0, (varX / 2) - 91, varY - 27, 0, 175, 182, 3);
 		
 		if(var2 instanceof LivingEntity) {
@@ -193,7 +203,7 @@ public class ClientEventHandler {
 		int varY = var1.getGuiScaledHeight();
 		
 		if(par2) {
-			par1.getTextureManager().bind(PlayerAttributesScreen.GUI);
+			par1.getTextureManager().bindForSetup(PlayerAttributesScreen.GUI); // TODO??
 			par1.gui.blit(par0, (varX / 2) - 91, varY - 27, 0, 166, 182, 3);
 			
 			ExAPI.playerAttributes(var0).ifPresent(var -> {
@@ -272,7 +282,7 @@ public class ClientEventHandler {
 		if(par2) {
 			boolean var12 = var5 || (var9 > 0 && var2 < 20 && var11 && var6);
 			
-			par1.getTextureManager().bind(GuiComponent.GUI_ICONS_LOCATION);
+			par1.getTextureManager().bindForSetup(GuiComponent.GUI_ICONS_LOCATION); // TODO??
 			par1.gui.blit(par0, (varX / 2) + 12, varY - 38, var12 ? 133 : 16, 27, 9, 9);
 			par1.gui.blit(par0, (varX / 2) + 12, varY - 38, var12 ? 88 : 52, 27, 9, 9);
 			par1.gui.blit(par0, (varX / 2) + (var3 < 100 ? 44 : 50), varY - 38, 34, 9, 9, 9);
@@ -285,8 +295,8 @@ public class ClientEventHandler {
 				}
 			});
 			
-			par1.getTextureManager().bind(PlayerAttributesScreen.GUI);
-			
+			par1.getTextureManager().bindForSetup(PlayerAttributesScreen.GUI); // TODO??
+
 			if(ClientRegistry.HUD.isDown() && var6) {
 				par1.gui.blit(par0, (varX / 2) + 12, varY - 38, 215, 0, 9, 9);
 			}
@@ -310,9 +320,11 @@ public class ClientEventHandler {
 			int var22 = (int)((System.currentTimeMillis() / 50L) % 20L);
 			int var23 = (int)((float)((255 * Math.sin(Math.toRadians(18 * var22))) + 255F) / 2F);
 			
-			GL11.glPushMatrix();
-			GL11.glScalef(0.8F, 0.8F, 0.8F);
-			
+			// GL11.glPushMatrix();
+			// GL11.glScalef(0.8F, 0.8F, 0.8F);
+			par0.pushPose();
+			par0.scale(0.8F, 0.8F, 0.8F);
+
 			var12.draw(par0, var19, 1.25F * ((varX / 2) + (var21 < 100 ? 54 : 60)), 1.25F * (varY - 36F), 0xFFFFFF);//+54 min left, + 60 max left
 			
 			if(var17 && var6) {
@@ -334,7 +346,8 @@ public class ClientEventHandler {
 				var12.draw(par0, var21 + "%", 1.25F * ((varX / 2) + (var13 < 10 ? 76 : (var13 < 100 ? 80 : 86))), 1.25F * (varY - 36F), 0xFFFFFF);
 			}
 			
-			GL11.glPopMatrix();
+			// GL11.glPopMatrix();
+			par0.popPose();
 		});
 	}
 	
@@ -343,14 +356,14 @@ public class ClientEventHandler {
 	 * @param par0
 	 */
 	@SubscribeEvent
-	public static void onGuiInitPost(final net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent.Post par0) {
-		Screen var0 = par0.getGui();
+	public static void onGuiInitPost(final ScreenEvent.InitScreenEvent.Post par0) {
+		Screen var0 = par0.getScreen();
 		
 		if(var0 instanceof InventoryScreen) {
 			AbstractContainerScreen<?> var1 = (AbstractContainerScreen<?>)var0;
 			
-			if(par0.getWidgetList() != null) {
-				par0.addWidget(new TexturedButton(var1, ClientConfig.CLIENT.guiButtonX.get().intValue(), ClientConfig.CLIENT.guiButtonY.get().intValue(), 14, 13, 176, 0, 0, (var2, var3) -> {
+			if(par0.getListenerList() != null) {
+				par0.addListener(new TexturedButton(var1, ClientConfig.CLIENT.guiButtonX.get().intValue(), ClientConfig.CLIENT.guiButtonY.get().intValue(), 14, 13, 176, 0, 0, (var2, var3) -> {
 					if(var2 instanceof InventoryScreen) {
 						Registry.NETWORK.sendToServer(new SwitchScreens(false));
 					}
@@ -365,17 +378,13 @@ public class ClientEventHandler {
 	 */
 	@SubscribeEvent
 	public static void onHUDRenderPre(final net.minecraftforge.client.event.RenderGameOverlayEvent.Pre par0) {
-		if(!ClientConfig.CLIENT.enableHUD.get().booleanValue()) return;
+		if(!ClientConfig.CLIENT.enableHUD.get()) return;
 		
 		ElementType var0 = par0.getType();
 		PoseStack var1 = par0.getMatrixStack();
 		LocalPlayer var2 = Minecraft.getInstance().player;
 		
-		if(UTILS_BAR.contains(var0)) {
-			par0.setCanceled(true);
-		}
-		
-		if(var0 == ElementType.HOTBAR) return;
+		// if(var0 == ElementType.HOTBAR) return;
 		if(var2.isCreative() || var2.isSpectator()) return;
 		
 		if(isRidingJumpable(var2)) {
@@ -388,11 +397,7 @@ public class ClientEventHandler {
 			drawLevelBar(var1, Minecraft.getInstance(), true);
 		}
 		
-		if(ClientConfig.CLIENT.enableHealthBar.get().booleanValue()) {
-			if(HEALTH_BAR.contains(var0)) {
-				par0.setCanceled(true);
-			}
-			
+		if(ClientConfig.CLIENT.enableHealthBar.get()) {
 			drawHealthBar(var1, Minecraft.getInstance(), true);
 			
 			if(isRiding(var2) || isRidingJumpable(var2)) {//var2.isRidingHorse()
@@ -400,7 +405,7 @@ public class ClientEventHandler {
 			}
 		}
 		
-		Minecraft.getInstance().getTextureManager().bind(GuiComponent.GUI_ICONS_LOCATION);
+		Minecraft.getInstance().getTextureManager().bindForSetup(GuiComponent.GUI_ICONS_LOCATION);
 	}
 	
 	/**
@@ -414,7 +419,7 @@ public class ClientEventHandler {
 		PoseStack var0 = par0.getMatrixStack();
 		LocalPlayer var1 = Minecraft.getInstance().player;
 		
-		if(par0.getType() == ElementType.HOTBAR) return;
+		// if(par0.getType() == ElementType.HOTBAR) return;
 		if(var1.isCreative() || var1.isSpectator()) return;
 		
 		if(!isRidingJumpable(var1)) {//!var1.isRidingHorse()

@@ -63,11 +63,11 @@ public class PlayerAttributesScreen extends AbstractContainerScreen<PlayerAttrib
 		super.render(par0, par1, par2, par3);
 		
 		this.activePage.render(par0, par1, par2, par3);
-		this.buttons.forEach(var -> {
+		this.renderables.forEach(var -> {
 			if(var instanceof PageButton) {
 				PageButton var1 = (PageButton)var;
 				
-				if(var1.isHovered()) {
+				if(var1.isHovered(par1, par2)) {
 					this.renderTooltip(par0, getPage(var1.additionalData()).getTitle(), par1, par2);
 				}
 			}
@@ -84,10 +84,10 @@ public class PlayerAttributesScreen extends AbstractContainerScreen<PlayerAttrib
 		int var0 = this.leftPos;
 		int var1 = (this.height - this.imageHeight) / 2;
 		
-		this.minecraft.getTextureManager().bind(GUI);
+		this.minecraft.getTextureManager().bindForSetup(GUI); // TODO??
 		this.blit(par0, var0, var1, 0, 0, this.imageWidth, this.imageHeight);
 		this.activePage.drawGuiContainerBackgroundLayer(par0, par1, par2, par3);
-		this.buttons.forEach(var -> {
+		this.renderables.forEach(var -> {
 			var.render(par0, par2, par3, par1);
 		});
 	}
@@ -96,7 +96,7 @@ public class PlayerAttributesScreen extends AbstractContainerScreen<PlayerAttrib
 	protected void init() {
 		super.init();
 		
-		this.addButton(new TexturedButton(this, ClientConfig.CLIENT.guiButtonX.get().intValue(), ClientConfig.CLIENT.guiButtonY.get().intValue(), 14, 13, 190, 0, -1, (var0, var1) -> {
+		this.addRenderableWidget(new TexturedButton(this, ClientConfig.CLIENT.guiButtonX.get(), ClientConfig.CLIENT.guiButtonY.get(), 14, 13, 190, 0, -1, (var0, var1) -> {
 			Registry.NETWORK.sendToServer(new SwitchScreens(true));
 			InventoryScreen var2 = new InventoryScreen(Minecraft.getInstance().player);
 			Minecraft.getInstance().setScreen(var2);
@@ -104,12 +104,12 @@ public class PlayerAttributesScreen extends AbstractContainerScreen<PlayerAttrib
 		
 		if(this.pages.size() > 1) {
 			for(int var = 0; var < this.pages.size(); var++) {
-				this.addButton(new PageButton(this, TAB_LOCATIONS[var][0], TAB_LOCATIONS[var][1], 28, 32, (var % 6) * 28, (var < 6 ? 0 : 64), var, (var0, var1) -> {
+				this.addRenderableWidget(new PageButton(this, TAB_LOCATIONS[var][0], TAB_LOCATIONS[var][1], 28, 32, (var % 6) * 28, (var < 6 ? 0 : 64), var, (var0, var1) -> {
 					this.activePage = getPage(var1);
 					this.activePage.init(this.minecraft, this, this.width, this.height);
-					this.buttons.forEach(var2 -> {
+					this.renderables.forEach(var2 -> {
 						if(var2 instanceof PageButton) {
-							var2.active = true;
+							((PageButton) var2).active = true;
 						}
 					});
 					
@@ -131,7 +131,7 @@ public class PlayerAttributesScreen extends AbstractContainerScreen<PlayerAttrib
 		this.activePage.init(this.minecraft, this, this.width, this.height);
 		
 		for(AbstractWidget var : this.activePage.getButtonList()) {
-			this.addButton(var);
+			this.addRenderableWidget(var);
 		}
 	}
 }

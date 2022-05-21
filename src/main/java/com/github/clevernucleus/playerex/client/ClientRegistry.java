@@ -1,5 +1,9 @@
 package com.github.clevernucleus.playerex.client;
 
+import com.github.clevernucleus.playerex.client.gui.ClientEventHandler;
+import net.minecraftforge.client.gui.ForgeIngameGui;
+import net.minecraftforge.client.gui.OverlayRegistry;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
 import org.lwjgl.glfw.GLFW;
 
 import com.github.clevernucleus.playerex.api.ExAPI;
@@ -32,11 +36,20 @@ public class ClientRegistry {
 	@SubscribeEvent
 	public static void clientSetup(final net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent par0) {
 		MenuScreens.register(Registry.ATTRIBUTES_CONTAINER, PlayerAttributesScreen::new);
-		net.minecraftforge.fml.client.registry.ClientRegistry.registerKeyBinding(HUD);
+		net.minecraftforge.client.ClientRegistry.registerKeyBinding(HUD);
 		
 		par0.enqueueWork(() -> {
 			ClientReg.registerPage(DefaultPage.REGISTRY_NAME, new DefaultPage());
 			ClientReg.registerPage(ResistancePage.REGISTRY_NAME, new ResistancePage());
 		});
+
+
+	}
+
+	public static void updateHudState(){
+		ClientEventHandler.UTILS_BAR.forEach((element) -> OverlayRegistry.enableOverlay(element, !ClientConfig.CLIENT.enableHUD.get()));
+		ClientEventHandler.HEALTH_BAR.forEach((element) -> OverlayRegistry.enableOverlay(element, !ClientConfig.CLIENT.enableHealthBar.get()));
+
+
 	}
 }

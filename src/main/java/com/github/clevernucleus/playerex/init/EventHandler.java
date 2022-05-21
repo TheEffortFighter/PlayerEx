@@ -1,26 +1,26 @@
 package com.github.clevernucleus.playerex.init;
 
-import java.util.Random;
-
 import com.github.clevernucleus.playerex.api.ExAPI;
 import com.github.clevernucleus.playerex.api.attribute.IPlayerAttribute;
 import com.github.clevernucleus.playerex.api.attribute.PlayerAttributes;
 import com.github.clevernucleus.playerex.init.capability.AttributesCapability;
 import com.github.clevernucleus.playerex.init.capability.CapabilityProvider;
 import com.github.clevernucleus.playerex.util.CommonConfig;
-
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.Event.Result;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.event.server.FMLServerStartingEvent;
+
+import java.util.Random;
 
 @Mod.EventBusSubscriber(modid = ExAPI.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE)
 public class EventHandler {
@@ -92,7 +92,7 @@ public class EventHandler {
 	}
 	
 	@SubscribeEvent
-    public static void serverLoad(final FMLServerStartingEvent par0) {
+    public static void serverLoad(final ServerStartingEvent par0) {
         ResetCommand.register(par0.getServer().getCommands().getDispatcher());
         LevelCommand.register(par0.getServer().getCommands().getDispatcher());
     }
@@ -376,17 +376,17 @@ public class EventHandler {
 	 * @param par0
 	 */
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
-	public static void onProjectileImpact(final net.minecraftforge.event.entity.ProjectileImpactEvent.Arrow par0) {
-		if(par0.getArrow().getOwner() instanceof Player) {
-			Player var0 = (Player)par0.getArrow().getOwner();
+	public static void onProjectileImpact(final net.minecraftforge.event.entity.ProjectileImpactEvent par0) {
+		if(par0.getProjectile().getOwner() instanceof Player && par0.getProjectile() instanceof AbstractArrow) {
+			Player var0 = (Player)par0.getProjectile().getOwner();
 			Random var1 = new Random();
 			
 			ExAPI.playerAttributes(var0).ifPresent(var -> {
 				boolean var2 = var1.nextInt(100) > (int)(100F * var.get(var0, PlayerAttributes.RANGED_CRIT_CHANCE));
-				double var3 = par0.getArrow().getBaseDamage() + var.get(var0, PlayerAttributes.RANGED_DAMAGE);
+				double var3 = ((AbstractArrow) par0.getProjectile()).getBaseDamage() + var.get(var0, PlayerAttributes.RANGED_DAMAGE);
 				
-				par0.getArrow().setCritArrow(var2);
-				par0.getArrow().setBaseDamage(var2 ? (var3 * (1D + var.get(var0, PlayerAttributes.RANGED_CRIT_DAMAGE))) : var3);
+				((AbstractArrow) par0.getProjectile()).setCritArrow(var2);
+				((AbstractArrow) par0.getProjectile()).setBaseDamage(var2 ? (var3 * (1D + var.get(var0, PlayerAttributes.RANGED_CRIT_DAMAGE))) : var3);
 			});
 		}
 	}

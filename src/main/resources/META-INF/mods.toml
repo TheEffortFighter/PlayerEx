@@ -1,15 +1,15 @@
 modLoader="javafml"
-loaderVersion="[35,)"
+loaderVersion="[38,)"
 license="MIT License"
 
 [[mods]]
 modId="playerex"
-version="1.1.8"
+version="1.3.0"
 displayName="Player Ex"
-displayURL="https://github.com/CleverNucleus/PlayerEx"
+displayURL="https://github.com/LukeGrahamLandryMC/PlayerEx"
 logoFile="logo.png"
 credits="CleverNucleus: Code and major texturer; sky_bai: simplified chinese translation (thanks!)"
-authors="CleverNucleus"
+authors="CleverNucleus, LukeGrahamLandry#6888"
 
 description='''
 A clever implementaton of a novel attributes API for players and devs.
@@ -18,13 +18,13 @@ A clever implementaton of a novel attributes API for players and devs.
 [[dependencies.playerex]]
     modId="forge"
     mandatory=true
-    versionRange="[35,)"
+    versionRange="[38,)"
     ordering="NONE"
     side="BOTH"
 
 [[dependencies.playerex]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.16.4]"
+    versionRange="[1.18,1.19)"
     ordering="NONE"
     side="BOTH"

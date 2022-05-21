@@ -1,22 +1,20 @@
 package com.github.clevernucleus.playerex.init.capability;
 
-import java.util.Map;
-import java.util.function.Supplier;
-
-import javax.annotation.Nonnull;
-
-import com.google.common.collect.Maps;
-import com.mojang.datafixers.util.Pair;
-
 import com.github.clevernucleus.playerex.api.ExAPI;
 import com.github.clevernucleus.playerex.api.attribute.IPlayerAttribute;
 import com.github.clevernucleus.playerex.api.attribute.PlayerAttributes;
-import net.minecraft.server.level.ServerPlayer;
+import com.google.common.collect.Maps;
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraftforge.network.NetworkEvent;
+
+import javax.annotation.Nonnull;
+import java.util.Map;
+import java.util.function.Supplier;
 
 public class AddPlayerAttributes {
 	private CompoundTag tag;

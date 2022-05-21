@@ -6,6 +6,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.renderer.entity.ItemRenderer;
@@ -59,7 +60,7 @@ public class PageButton extends AbstractButton {
 	public void renderButton(PoseStack par0, int par1, int par2, float par3) {
 		Minecraft var0 = Minecraft.getInstance();
 		
-		var0.getTextureManager().bind(PlayerAttributesScreen.TAB);
+		var0.getTextureManager().bindForSetup(PlayerAttributesScreen.TAB);
 		
 		RenderSystem.disableDepthTest();
 		
@@ -70,5 +71,10 @@ public class PageButton extends AbstractButton {
 		ItemRenderer var1 = var0.getItemRenderer();
 		
 		var1.renderAndDecorateItem(this.parentScreen.getPage(this.additionalData).displayStack(), this.x + 6, this.y + (this.additionalData < 6 ? 8 : 6));
+	}
+
+	@Override
+	public void updateNarration(NarrationElementOutput p_169152_) {
+
 	}
 }
