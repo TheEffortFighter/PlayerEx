@@ -14,13 +14,13 @@ import com.github.clevernucleus.playerex.init.container.PlayerAttributesContaine
 import com.github.clevernucleus.playerex.init.container.SwitchScreens;
 import com.github.clevernucleus.playerex.util.CommonConfig;
 
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.inventory.container.Container;
-import net.minecraft.inventory.container.ContainerType;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.MenuType;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.CapabilityManager;
 import net.minecraftforge.common.extensions.IForgeContainerType;
@@ -36,7 +36,7 @@ public class Registry {
 	public static final SimpleChannel NETWORK = NetworkRegistry.newSimpleChannel(new ResourceLocation(ExAPI.MODID, "path"), () -> "1", "1"::equals, "1"::equals);
 	
 	/** Static identifier for the player elements container type. */
-	public static final ContainerType<PlayerAttributesContainer> ATTRIBUTES_CONTAINER = register("attributes", IForgeContainerType.create((var0, var1, var2) -> new PlayerAttributesContainer(var0, var1)));
+	public static final MenuType<PlayerAttributesContainer> ATTRIBUTES_CONTAINER = register("attributes", IForgeContainerType.create((var0, var1, var2) -> new PlayerAttributesContainer(var0, var1)));
 	
 	/**
 	 * Used to pass a container type and its registry name through to a list and returned again.
@@ -44,7 +44,7 @@ public class Registry {
 	 * @param par1 The container type object.
 	 * @return The container type object, with its registry name set.
 	 */
-	private static <T extends Container> ContainerType<T> register(final @Nonnull String par0, ContainerType<T> par1) {
+	private static <T extends AbstractContainerMenu> MenuType<T> register(final @Nonnull String par0, MenuType<T> par1) {
 		par1.setRegistryName(new ResourceLocation(ExAPI.MODID, par0));
 		
 		return par1;
@@ -59,13 +59,13 @@ public class Registry {
 		CapabilityManager.INSTANCE.register(IPlayerAttributes.class, new Capability.IStorage<IPlayerAttributes>() {
 			
 			@Override
-			public INBT writeNBT(Capability<IPlayerAttributes> par0, IPlayerAttributes par1, Direction par2) {
+			public Tag writeNBT(Capability<IPlayerAttributes> par0, IPlayerAttributes par1, Direction par2) {
 				return par1.write();
 			}
 			
 			@Override
-			public void readNBT(Capability<IPlayerAttributes> par0, IPlayerAttributes par1, Direction par2, INBT par3) {
-				par1.read((CompoundNBT)par3);
+			public void readNBT(Capability<IPlayerAttributes> par0, IPlayerAttributes par1, Direction par2, Tag par3) {
+				par1.read((CompoundTag)par3);
 			}
 		}, AttributesCapability::new);
 		
@@ -160,7 +160,7 @@ public class Registry {
 	 * @param par0
 	 */
 	@SubscribeEvent
-	public static void registerContainerTypes(final net.minecraftforge.event.RegistryEvent.Register<ContainerType<?>> par0) {
+	public static void registerContainerTypes(final net.minecraftforge.event.RegistryEvent.Register<MenuType<?>> par0) {
 		par0.getRegistry().register(ATTRIBUTES_CONTAINER);
 	}
 }

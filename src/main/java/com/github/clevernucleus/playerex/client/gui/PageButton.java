@@ -2,21 +2,21 @@ package com.github.clevernucleus.playerex.client.gui;
 
 import java.util.function.BiConsumer;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.gui.widget.button.AbstractButton;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.components.AbstractButton;
+import net.minecraft.client.renderer.entity.ItemRenderer;
+import net.minecraft.network.chat.TextComponent;
 
 /**
  * Similar to ImageButton, but with some modifications specific to the needs of this object.
  */
 public class PageButton extends AbstractButton {
 	private PlayerAttributesScreen parentScreen;
-	private BiConsumer<ContainerScreen<?>, Integer> pressFunction; 
+	private BiConsumer<AbstractContainerScreen<?>, Integer> pressFunction; 
 	private int textureLat, textureLon, additionalData;
 	
 	/**
@@ -30,8 +30,8 @@ public class PageButton extends AbstractButton {
 	 * @param par6 Button's texture start position (longitude).
 	 * @param par7 Called when the button is pressed; additional data.
 	 */
-	public PageButton(final ContainerScreen<?> par0, final int par1, final int par2, int par3, int par4, final int par5, final int par6, final int par7, final BiConsumer<ContainerScreen<?>, Integer> par8) {
-		super(par0.getGuiLeft() + par1, par0.getGuiTop() + par2, par3, par4, new StringTextComponent(""));
+	public PageButton(final AbstractContainerScreen<?> par0, final int par1, final int par2, int par3, int par4, final int par5, final int par6, final int par7, final BiConsumer<AbstractContainerScreen<?>, Integer> par8) {
+		super(par0.getGuiLeft() + par1, par0.getGuiTop() + par2, par3, par4, new TextComponent(""));
 		
 		this.parentScreen = (PlayerAttributesScreen)par0;
 		this.textureLat = par5;
@@ -56,7 +56,7 @@ public class PageButton extends AbstractButton {
 	}
 	
 	@Override
-	public void renderButton(MatrixStack par0, int par1, int par2, float par3) {
+	public void renderButton(PoseStack par0, int par1, int par2, float par3) {
 		Minecraft var0 = Minecraft.getInstance();
 		
 		var0.getTextureManager().bind(PlayerAttributesScreen.TAB);

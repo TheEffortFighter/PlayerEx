@@ -4,8 +4,8 @@ import java.util.UUID;
 
 import com.github.clevernucleus.playerex.api.Limit;
 
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * This is the attribute interface that should be used to build new attributes.

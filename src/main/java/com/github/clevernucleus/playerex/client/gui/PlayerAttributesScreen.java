@@ -5,7 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import com.github.clevernucleus.playerex.api.ExAPI;
 import com.github.clevernucleus.playerex.api.client.ClientReg;
@@ -15,14 +15,14 @@ import com.github.clevernucleus.playerex.init.Registry;
 import com.github.clevernucleus.playerex.init.container.PlayerAttributesContainer;
 import com.github.clevernucleus.playerex.init.container.SwitchScreens;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.gui.screen.inventory.InventoryScreen;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.entity.player.PlayerInventory;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
 
-public class PlayerAttributesScreen extends ContainerScreen<PlayerAttributesContainer> {
+public class PlayerAttributesScreen extends AbstractContainerScreen<PlayerAttributesContainer> {
 	
 	/** Main GUI resources. */
 	public static final ResourceLocation GUI = new ResourceLocation(ExAPI.MODID, "textures/gui/gui.png");
@@ -35,7 +35,7 @@ public class PlayerAttributesScreen extends ContainerScreen<PlayerAttributesCont
 	private List<Page> pages = new ArrayList<Page>();
 	private Page activePage;
 	
-	public PlayerAttributesScreen(final PlayerAttributesContainer par0, final PlayerInventory par1, final ITextComponent par2) {
+	public PlayerAttributesScreen(final PlayerAttributesContainer par0, final Inventory par1, final Component par2) {
 		super(par0, par1, par2);
 		
 		this.pages.add(0, ClientReg.getPage(DefaultPage.REGISTRY_NAME));
@@ -57,7 +57,7 @@ public class PlayerAttributesScreen extends ContainerScreen<PlayerAttributesCont
 	}
 	
 	@Override
-	public void render(MatrixStack par0, int par1, int par2, float par3) {
+	public void render(PoseStack par0, int par1, int par2, float par3) {
 		this.renderBackground(par0);
 		
 		super.render(par0, par1, par2, par3);
@@ -75,12 +75,12 @@ public class PlayerAttributesScreen extends ContainerScreen<PlayerAttributesCont
 	}
 	
 	@Override
-	protected void renderLabels(MatrixStack par0, int par1, int par2) {
+	protected void renderLabels(PoseStack par0, int par1, int par2) {
 		this.activePage.drawGuiContainerForegroundLayer(par0, par1, par2);
 	}
 	
 	@Override
-	protected void renderBg(MatrixStack par0, float par1, int par2, int par3) {
+	protected void renderBg(PoseStack par0, float par1, int par2, int par3) {
 		int var0 = this.leftPos;
 		int var1 = (this.height - this.imageHeight) / 2;
 		
@@ -115,13 +115,13 @@ public class PlayerAttributesScreen extends ContainerScreen<PlayerAttributesCont
 					
 					for(Page var2 : this.pages) {
 						if(var2 != this.activePage) {
-							for(Widget var3 : var2.getButtonList()) {
+							for(AbstractWidget var3 : var2.getButtonList()) {
 								var3.visible = false;
 							}
 						}
 					}
 					
-					for(Widget var2 : this.activePage.getButtonList()) {
+					for(AbstractWidget var2 : this.activePage.getButtonList()) {
 						var2.visible = true;
 					}
 				}));
@@ -130,7 +130,7 @@ public class PlayerAttributesScreen extends ContainerScreen<PlayerAttributesCont
 		
 		this.activePage.init(this.minecraft, this, this.width, this.height);
 		
-		for(Widget var : this.activePage.getButtonList()) {
+		for(AbstractWidget var : this.activePage.getButtonList()) {
 			this.addButton(var);
 		}
 	}

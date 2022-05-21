@@ -4,12 +4,12 @@ import java.util.Optional;
 
 import com.github.clevernucleus.playerex.util.IProxy;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerEntity;;
+import net.minecraft.world.entity.player.Player;;
 
 public class ClientProxy implements IProxy {
 	
 	@Override
-	public Optional<PlayerEntity> player() {
+	public Optional<Player> player() {
 		return Optional.ofNullable(Minecraft.getInstance().player);
 	}
 }

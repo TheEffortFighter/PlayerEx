@@ -9,13 +9,13 @@ import com.github.clevernucleus.playerex.init.capability.AttributesCapability;
 import com.github.clevernucleus.playerex.init.capability.CapabilityProvider;
 import com.github.clevernucleus.playerex.util.CommonConfig;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.DamageSource;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.Event.Result;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -29,12 +29,12 @@ public class EventHandler {
 	 * Initialises the config to the game.
 	 * @param par0
 	 */
-	private static void init(final PlayerEntity par0) {
+	private static void init(final Player par0) {
 		if(par0 == null) return;
 		if(par0.level.isClientSide) return;
 		
 		ExAPI.playerAttributes(par0).ifPresent(var -> {
-			CompoundNBT var0 = var.write();
+			CompoundTag var0 = var.write();
 			
 			if(!var0.getBoolean("Initialised")) {
 				var.add(par0, PlayerAttributes.CONSTITUTION, CommonConfig.COMMON.constitution.get().doubleValue());
@@ -49,7 +49,7 @@ public class EventHandler {
 	}
 	
 	/** Bit of a temporary thing; we'll rewrite this nicely when we rework the system for 1.17 (or pre-1.17)*/
-	public static void reset(final PlayerEntity par0, final boolean par1) {
+	public static void reset(final Player par0, final boolean par1) {
 		if(par0 == null) return;
 		if(par0.level.isClientSide) return;
 		
@@ -73,7 +73,7 @@ public class EventHandler {
 	 * Updates the values of the player's attributes.
 	 * @param par0 Player instance.
 	 */
-	public static void update(PlayerEntity par0) {
+	public static void update(Player par0) {
 		if(par0 == null) return;
 		if(par0.level.isClientSide) return;
 		
@@ -84,7 +84,7 @@ public class EventHandler {
 	 * Sends packets from the server to the client to sync the client with the server.
 	 * @param par0 Player instance.
 	 */
-	public static void sync(PlayerEntity par0) {
+	public static void sync(Player par0) {
 		if(par0 == null) return;
 		if(par0.level.isClientSide) return;
 		
@@ -103,7 +103,7 @@ public class EventHandler {
 	 */
 	@SubscribeEvent
     public static void onCapabilityAttachEntity(final net.minecraftforge.event.AttachCapabilitiesEvent<Entity> par0) {
-		if(par0.getObject() instanceof PlayerEntity) {
+		if(par0.getObject() instanceof Player) {
 			par0.addCapability(new ResourceLocation(ExAPI.MODID, "playerattributes"), new CapabilityProvider());
 		}
 	}
@@ -114,8 +114,8 @@ public class EventHandler {
 	 */
 	@SubscribeEvent
     public static void onPlayerEntityCloned(final net.minecraftforge.event.entity.player.PlayerEvent.Clone par0) {
-		PlayerEntity var0 = par0.getPlayer();
-		PlayerEntity var1 = par0.getOriginal();
+		Player var0 = par0.getPlayer();
+		Player var1 = par0.getOriginal();
 		
 		if(var0.level.isClientSide) return;
 		if(par0.isWasDeath() && CommonConfig.COMMON.resetOnDeath.get()) {
@@ -168,7 +168,7 @@ public class EventHandler {
 	 */
 	@SubscribeEvent
 	public static void onPlayerLoggedIn(final net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent par0) {
-		PlayerEntity var0 = par0.getPlayer();
+		Player var0 = par0.getPlayer();
 		
 		init(var0);
 		update(var0);
@@ -177,7 +177,7 @@ public class EventHandler {
 		if(var0.level.isClientSide) return;
 		
 		ExAPI.playerAttributes(var0).ifPresent(var -> {
-			CompoundNBT var1 = var.write();
+			CompoundTag var1 = var.write();
 			
 			if(var1.contains("CurrentHealth")) {
 				var0.setHealth(var1.getFloat("CurrentHealth"));
@@ -191,12 +191,12 @@ public class EventHandler {
 	 */
 	@SubscribeEvent
 	public static void onPlayerLoggedOut(final net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent par0) {
-		PlayerEntity var0 = par0.getPlayer();
+		Player var0 = par0.getPlayer();
 		
 		if(var0.level.isClientSide) return;
 		
 		ExAPI.playerAttributes(var0).ifPresent(var -> {
-			CompoundNBT var1 = var.write();
+			CompoundTag var1 = var.write();
 			
 			var1.putFloat("CurrentHealth", var0.getHealth());
 			var.read(var1);
@@ -209,9 +209,9 @@ public class EventHandler {
 	 */
 	@SubscribeEvent
 	public static void onPlayerEquippedItems(final net.minecraftforge.event.entity.living.LivingEquipmentChangeEvent par0) {
-		if(!(par0.getEntityLiving() instanceof PlayerEntity)) return;
+		if(!(par0.getEntityLiving() instanceof Player)) return;
 		
-		PlayerEntity var0 = (PlayerEntity)par0.getEntityLiving();
+		Player var0 = (Player)par0.getEntityLiving();
 		ExAPI.playerAttributes(var0).ifPresent(var -> ((AttributesCapability)var).putEquipment(par0.getSlot(), par0.getFrom()));
 	}
 	
@@ -221,7 +221,7 @@ public class EventHandler {
 	 */
 	@SubscribeEvent
 	public static void onPlayerTick(final net.minecraftforge.event.TickEvent.PlayerTickEvent par0) {
-		PlayerEntity var0 = par0.player;
+		Player var0 = par0.player;
 		
 		if(var0.level.isClientSide) return;
 		
@@ -230,7 +230,7 @@ public class EventHandler {
 			
 			AttributesCapability var1 = (AttributesCapability)var;
 			
-			for(EquipmentSlotType var2 : EquipmentSlotType.values()) {
+			for(EquipmentSlot var2 : EquipmentSlot.values()) {
 				ItemStack var3 = var0.getItemBySlot(var2);
 				ItemStack var4 = var1.getEquipment(var2);
 				
@@ -248,7 +248,7 @@ public class EventHandler {
 	 */
 	@SubscribeEvent
 	public static void onExperienceProcessed(final net.minecraftforge.event.entity.player.PlayerXpEvent.XpChange par0) {
-		PlayerEntity var0 = par0.getPlayer();
+		Player var0 = par0.getPlayer();
 		
 		if(var0.level.isClientSide) return;
 		
@@ -276,8 +276,8 @@ public class EventHandler {
 	 */
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public static void onHeal(final net.minecraftforge.event.entity.living.LivingHealEvent par0) {
-		if(par0.getEntityLiving() instanceof PlayerEntity) {
-			PlayerEntity var0 = (PlayerEntity)par0.getEntityLiving();
+		if(par0.getEntityLiving() instanceof Player) {
+			Player var0 = (Player)par0.getEntityLiving();
 			
 			if(var0.level.isClientSide) return;
 			
@@ -293,7 +293,7 @@ public class EventHandler {
 	 */
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public static void onCrit(final net.minecraftforge.event.entity.player.CriticalHitEvent par0) {
-		PlayerEntity var0 = par0.getPlayer();
+		Player var0 = par0.getPlayer();
 		Random var1 = new Random();
 		
 		if(var0.level.isClientSide) return;
@@ -315,8 +315,8 @@ public class EventHandler {
 	 */
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public static void onLivingHurt(final net.minecraftforge.event.entity.living.LivingHurtEvent par0) {
-		if(par0.getEntityLiving() instanceof PlayerEntity) {
-			PlayerEntity var0 = (PlayerEntity)par0.getEntityLiving();
+		if(par0.getEntityLiving() instanceof Player) {
+			Player var0 = (Player)par0.getEntityLiving();
 			Random var1 = new Random();
 			
 			if(var0.level.isClientSide) return;
@@ -362,8 +362,8 @@ public class EventHandler {
 			});
 		}
 		
-		if(par0.getSource().getEntity() instanceof PlayerEntity) {
-			PlayerEntity var0 = (PlayerEntity)par0.getSource().getEntity();
+		if(par0.getSource().getEntity() instanceof Player) {
+			Player var0 = (Player)par0.getSource().getEntity();
 			
 			ExAPI.playerAttributes(var0).ifPresent(var -> {
 				var0.heal(par0.getAmount() * (float)var.get(var0, PlayerAttributes.LIFESTEAL));
@@ -377,8 +377,8 @@ public class EventHandler {
 	 */
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public static void onProjectileImpact(final net.minecraftforge.event.entity.ProjectileImpactEvent.Arrow par0) {
-		if(par0.getArrow().getOwner() instanceof PlayerEntity) {
-			PlayerEntity var0 = (PlayerEntity)par0.getArrow().getOwner();
+		if(par0.getArrow().getOwner() instanceof Player) {
+			Player var0 = (Player)par0.getArrow().getOwner();
 			Random var1 = new Random();
 			
 			ExAPI.playerAttributes(var0).ifPresent(var -> {

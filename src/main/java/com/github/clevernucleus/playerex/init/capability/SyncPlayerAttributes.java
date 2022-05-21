@@ -6,15 +6,15 @@ import javax.annotation.Nonnull;
 
 import com.github.clevernucleus.playerex.PlayerEx;
 import com.github.clevernucleus.playerex.api.ExAPI;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 /**
  * Network packet responsible for syncing server entity display data to the client.
  */
 public class SyncPlayerAttributes {
-	private CompoundNBT tag;
+	private CompoundTag tag;
 	private double offset, scale;
 	
 	public SyncPlayerAttributes() {}
@@ -25,7 +25,7 @@ public class SyncPlayerAttributes {
 	 * @param par1 Offset
 	 * @param par2 Scale
 	 */
-	public SyncPlayerAttributes(final @Nonnull CompoundNBT par0, final double par1, final double par2) {
+	public SyncPlayerAttributes(final @Nonnull CompoundTag par0, final double par1, final double par2) {
 		this.tag = par0;
 		this.offset = par1;
 		this.scale = par2;
@@ -36,7 +36,7 @@ public class SyncPlayerAttributes {
 	 * @param par0 Input packet.
 	 * @param par1 Input buffer
 	 */
-	public static void encode(SyncPlayerAttributes par0, PacketBuffer par1) {
+	public static void encode(SyncPlayerAttributes par0, FriendlyByteBuf par1) {
 		par1.writeNbt(par0.tag);
 		par1.writeDouble(par0.offset);
 		par1.writeDouble(par0.scale);
@@ -47,7 +47,7 @@ public class SyncPlayerAttributes {
 	 * @param par0 Input buffer.
 	 * @return A new Packet instance.
 	 */
-	public static SyncPlayerAttributes decode(PacketBuffer par0) {
+	public static SyncPlayerAttributes decode(FriendlyByteBuf par0) {
 		return new SyncPlayerAttributes(par0.readNbt(), par0.readDouble(), par0.readDouble());
 	}
 	

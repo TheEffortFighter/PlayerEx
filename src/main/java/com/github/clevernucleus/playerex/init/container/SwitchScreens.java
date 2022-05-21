@@ -2,8 +2,8 @@ package com.github.clevernucleus.playerex.init.container;
 
 import java.util.function.Supplier;
 
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.fml.network.NetworkHooks;
 
@@ -28,7 +28,7 @@ public class SwitchScreens {
 	 * @param par0 Input packet.
 	 * @param par1 Input buffer
 	 */
-	public static void encode(SwitchScreens par0, PacketBuffer par1) {
+	public static void encode(SwitchScreens par0, FriendlyByteBuf par1) {
 		par1.writeBoolean(par0.playerInventory);
 	}
 	
@@ -37,7 +37,7 @@ public class SwitchScreens {
 	 * @param par0 Input buffer.
 	 * @return A new Packet instance.
 	 */
-	public static SwitchScreens decode(PacketBuffer par0) {
+	public static SwitchScreens decode(FriendlyByteBuf par0) {
 		return new SwitchScreens(par0.readBoolean());
 	}
 	
@@ -49,7 +49,7 @@ public class SwitchScreens {
 	public static void handle(SwitchScreens par0, Supplier<NetworkEvent.Context> par1) {
 		par1.get().enqueueWork(() -> {
 			if(par0.playerInventory) {
-				ServerPlayerEntity var0 = par1.get().getSender();
+				ServerPlayer var0 = par1.get().getSender();
 				
 				if(var0 != null) {
 					var0.containerMenu.removed(var0);

@@ -14,18 +14,18 @@ import com.github.clevernucleus.playerex.api.attribute.PlayerAttributes;
 import com.github.clevernucleus.playerex.init.Registry;
 import com.github.clevernucleus.playerex.util.CommonConfig;
 
-import net.minecraft.entity.ai.attributes.Attribute;
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.AttributeModifierManager;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap;
-import net.minecraft.entity.ai.attributes.AttributeModifierMap.MutableAttribute;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.ListNBT;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.AttributeMap;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier.Builder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.ListTag;
 import net.minecraftforge.fml.network.NetworkDirection;
 
 /**
@@ -33,17 +33,17 @@ import net.minecraftforge.fml.network.NetworkDirection;
  */
 public class AttributesCapability implements IPlayerAttributes {
 	private Map<IPlayerAttribute, Float> clientStore;
-	private Map<EquipmentSlotType, ItemStack> equipmentStore;
-	private AttributeModifierManager attributeModifierManager;
-	private CompoundNBT tag;
+	private Map<EquipmentSlot, ItemStack> equipmentStore;
+	private AttributeMap attributeModifierManager;
+	private CompoundTag tag;
 	private double offset, scale;
 	
 	public AttributesCapability() {
-		MutableAttribute var0 = AttributeModifierMap.builder();
-		ListNBT var1 = new ListNBT();
-		CompoundNBT var2 = new CompoundNBT();
+		Builder var0 = AttributeSupplier.builder();
+		ListTag var1 = new ListTag();
+		CompoundTag var2 = new CompoundTag();
 		
-		this.tag = new CompoundNBT();
+		this.tag = new CompoundTag();
 		this.tag.put("Attributes", var1);
 		this.tag.put("Modifiers", var2);
 		
@@ -57,14 +57,14 @@ public class AttributesCapability implements IPlayerAttributes {
 		
 		this.offset = 0D;
 		this.scale = 0D;
-		this.attributeModifierManager = new AttributeModifierManager(var0.build());
+		this.attributeModifierManager = new AttributeMap(var0.build());
 		this.clientStore = new HashMap<>();
 		this.equipmentStore = new HashMap<>();
-		this.equipmentStore.put(EquipmentSlotType.HEAD, ItemStack.EMPTY);
-		this.equipmentStore.put(EquipmentSlotType.CHEST, ItemStack.EMPTY);
-		this.equipmentStore.put(EquipmentSlotType.LEGS, ItemStack.EMPTY);
-		this.equipmentStore.put(EquipmentSlotType.FEET, ItemStack.EMPTY);
-		this.equipmentStore.put(EquipmentSlotType.OFFHAND, ItemStack.EMPTY);
+		this.equipmentStore.put(EquipmentSlot.HEAD, ItemStack.EMPTY);
+		this.equipmentStore.put(EquipmentSlot.CHEST, ItemStack.EMPTY);
+		this.equipmentStore.put(EquipmentSlot.LEGS, ItemStack.EMPTY);
+		this.equipmentStore.put(EquipmentSlot.FEET, ItemStack.EMPTY);
+		this.equipmentStore.put(EquipmentSlot.OFFHAND, ItemStack.EMPTY);
 	}
 	
 	/**
@@ -72,7 +72,7 @@ public class AttributesCapability implements IPlayerAttributes {
 	 * @param par1
 	 * @return The correct AttributeModifierManager instance based on the input IPlayerAttribute.
 	 */
-	private AttributeModifierManager getAttributeModifier(PlayerEntity par0, IPlayerAttribute par1) {
+	private AttributeMap getAttributeModifier(Player par0, IPlayerAttribute par1) {
 		if(par1.type() == IPlayerAttribute.Type.GAME) {
 			return par0.getAttributes();
 		} else if(par1.type() == IPlayerAttribute.Type.ALL || par1.type() == IPlayerAttribute.Type.DATA) {
@@ -95,7 +95,7 @@ public class AttributesCapability implements IPlayerAttributes {
 	 * @param par1
 	 */
 	private void createAttributeTag(IPlayerAttribute par0, double par1) {
-		CompoundNBT var1 = new CompoundNBT();
+		CompoundTag var1 = new CompoundTag();
 		
 		var1.putString("Name", par0.toString());
 		var1.putDouble("Value", par1);
@@ -116,8 +116,8 @@ public class AttributesCapability implements IPlayerAttributes {
 			return;
 		}
 		
-		for(INBT var : this.tag.getList("Attributes", 10)) {
-			CompoundNBT var0 = (CompoundNBT)var;
+		for(Tag var : this.tag.getList("Attributes", 10)) {
+			CompoundTag var0 = (CompoundTag)var;
 			String var1 = var0.getString("Name");
 			
 			if(var1.equals(par0.toString())) {
@@ -139,8 +139,8 @@ public class AttributesCapability implements IPlayerAttributes {
 		
 		if(isAttributeListEmpty()) return var0;
 		
-		for(INBT var : this.tag.getList("Attributes", 10)) {
-			CompoundNBT var1 = (CompoundNBT)var;
+		for(Tag var : this.tag.getList("Attributes", 10)) {
+			CompoundTag var1 = (CompoundTag)var;
 			String var2 = var1.getString("Name");
 			
 			if(var2.equals(par0.toString())) return var1.getDouble("Value");
@@ -156,11 +156,11 @@ public class AttributesCapability implements IPlayerAttributes {
 	 * @param par1
 	 */
 	private void putModifier(IPlayerAttribute par0, AttributeModifier par1) {
-		CompoundNBT var0 = this.tag.getCompound("Modifiers");
-		ListNBT var1 = (var0.contains(par0.toString()) ? var0.getList(par0.toString(), 10) : new ListNBT());
+		CompoundTag var0 = this.tag.getCompound("Modifiers");
+		ListTag var1 = (var0.contains(par0.toString()) ? var0.getList(par0.toString(), 10) : new ListTag());
 		
-		for(INBT var : var1) {
-			CompoundNBT var2 = (CompoundNBT)var;
+		for(Tag var : var1) {
+			CompoundTag var2 = (CompoundTag)var;
 			UUID var3 = var2.getUUID("UUID");
 			UUID var4 = par1.getId();
 			
@@ -178,14 +178,14 @@ public class AttributesCapability implements IPlayerAttributes {
 	 * @param par1
 	 */
 	private void removeModifier(IPlayerAttribute par0, AttributeModifier par1) {
-		CompoundNBT var0 = this.tag.getCompound("Modifiers");
+		CompoundTag var0 = this.tag.getCompound("Modifiers");
 		
 		if(!var0.contains(par0.toString())) return;
 		
-		ListNBT var1 = var0.getList(par0.toString(), 10);
+		ListTag var1 = var0.getList(par0.toString(), 10);
 		
 		for(int var = 0; var < var1.size(); var++) {
-			CompoundNBT var2 = var1.getCompound(var);
+			CompoundTag var2 = var1.getCompound(var);
 			UUID var3 = var2.getUUID("UUID");
 			UUID var4 = par1.getId();
 			
@@ -201,20 +201,20 @@ public class AttributesCapability implements IPlayerAttributes {
 	 * Takes all modifiers from the modifier list and reapplies them.
 	 * @param par0
 	 */
-	private void refreshModifierMap(PlayerEntity par0) {
-		CompoundNBT var0 = this.tag.getCompound("Modifiers");
+	private void refreshModifierMap(Player par0) {
+		CompoundTag var0 = this.tag.getCompound("Modifiers");
 		Multimap<IPlayerAttribute, AttributeModifier> var1 = ArrayListMultimap.create();
 		
 		if(var0.isEmpty()) return;
 		
 		for(String var : var0.getAllKeys()) {
-			ListNBT var2 = var0.getList(var, 10);
+			ListTag var2 = var0.getList(var, 10);
 			IPlayerAttribute var3 = PlayerAttributes.fromRegistryName(var);
 			
 			if(var3 == null) return;
 			
-			for(INBT var4 : var2) {
-				CompoundNBT var5 = (CompoundNBT)var4;
+			for(Tag var4 : var2) {
+				CompoundTag var5 = (CompoundTag)var4;
 				AttributeModifier var6 = AttributeModifier.load(var5);
 				
 				var1.put(var3, var6);
@@ -237,19 +237,19 @@ public class AttributesCapability implements IPlayerAttributes {
 	}
 	
 	@Override
-	public double expCoeff(PlayerEntity par0) {
+	public double expCoeff(Player par0) {
 		return get(par0, PlayerAttributes.EXPERIENCE) / (this.offset + (this.scale * Math.pow(get(par0, PlayerAttributes.LEVEL), 2.0D)));
 	}
 	
 	@Override
-	public double get(PlayerEntity par0, IPlayerAttribute par1) {
+	public double get(Player par0, IPlayerAttribute par1) {
 		if(par0.level.isClientSide) return this.clientStore.getOrDefault(par1, 0F);
 		
 		return getAttributeModifier(par0, par1).getValue(par1.get());
 	}
 	
 	@Override
-	public void add(PlayerEntity par0, IPlayerAttribute par1, double par2) {
+	public void add(Player par0, IPlayerAttribute par1, double par2) {
 		double var0 = getAttribute(par1) + par2;
 		
 		Multimap<Attribute, AttributeModifier> var1 = HashMultimap.create();
@@ -266,7 +266,7 @@ public class AttributesCapability implements IPlayerAttributes {
 	}
 	
 	@Override
-	public void forceSet(PlayerEntity par0, IPlayerAttribute par1, double par2) {
+	public void forceSet(Player par0, IPlayerAttribute par1, double par2) {
 		Multimap<Attribute, AttributeModifier> var0 = HashMultimap.create();
 		AttributeModifier var1 = new AttributeModifier(par1.uuid(), par1.toString(), 0D, AttributeModifier.Operation.ADDITION);
 		
@@ -279,7 +279,7 @@ public class AttributesCapability implements IPlayerAttributes {
 	}
 	
 	@Override
-	public IPlayerAttributes applyModifier(PlayerEntity par0, IPlayerAttribute par1, AttributeModifier par2) {
+	public IPlayerAttributes applyModifier(Player par0, IPlayerAttribute par1, AttributeModifier par2) {
 		if(par0 == null || par1 == null || par2 == null) return this;
 		
 		Multimap<Attribute, AttributeModifier> var0 = HashMultimap.create();
@@ -297,7 +297,7 @@ public class AttributesCapability implements IPlayerAttributes {
 	}
 	
 	@Override
-	public IPlayerAttributes removeModifier(PlayerEntity par0, IPlayerAttribute par1, AttributeModifier par2) {
+	public IPlayerAttributes removeModifier(Player par0, IPlayerAttribute par1, AttributeModifier par2) {
 		if(par0 == null || par1 == null || par2 == null) return this;
 		
 		Multimap<Attribute, AttributeModifier> var0 = HashMultimap.create();
@@ -315,12 +315,12 @@ public class AttributesCapability implements IPlayerAttributes {
 	}
 	
 	@Override
-	public CompoundNBT write() {
+	public CompoundTag write() {
 		return this.tag;
 	}
 	
 	@Override
-	public void read(CompoundNBT par0) {
+	public void read(CompoundTag par0) {
 		this.tag = par0;
 	}
 	
@@ -328,7 +328,7 @@ public class AttributesCapability implements IPlayerAttributes {
 	 * Updates and refreshes the capability data during event's such as death and cloning. Dev's should AVOID using this.
 	 * @param par0 PlayerEntity instance.
 	 */
-	public void update(PlayerEntity par0) {
+	public void update(Player par0) {
 		for(IPlayerAttribute par1 : PlayerAttributes.attributes()) {
 			double var0 = getAttribute(par1);
 			
@@ -352,14 +352,14 @@ public class AttributesCapability implements IPlayerAttributes {
 	 * @param par1
 	 * @param par2
 	 */
-	public void receive(CompoundNBT par0, double par1, double par2) {
+	public void receive(CompoundTag par0, double par1, double par2) {
 		if(par0 == null) return;
 		if(!par0.contains("Data")) return;
 		
-		ListNBT var0 = par0.getList("Data", 10);
+		ListTag var0 = par0.getList("Data", 10);
 		
-		for(INBT var : var0) {
-			CompoundNBT var1 = (CompoundNBT)var;
+		for(Tag var : var0) {
+			CompoundTag var1 = (CompoundTag)var;
 			IPlayerAttribute var2 = PlayerAttributes.fromRegistryName(var1.getString("Name"));
 			
 			this.clientStore.put(var2, var1.getFloat("Value"));
@@ -373,15 +373,15 @@ public class AttributesCapability implements IPlayerAttributes {
 	 * Sends data from the server to the client.
 	 * @param par0 PlayerEntity instance.
 	 */
-	public void send(PlayerEntity par0) {
+	public void send(Player par0) {
 		if(par0 == null) return;
 		if(par0.level.isClientSide) return;
 		
-		CompoundNBT var0 = new CompoundNBT();
-		ListNBT var1 = new ListNBT();
+		CompoundTag var0 = new CompoundTag();
+		ListTag var1 = new ListTag();
 		
 		for(IPlayerAttribute var : PlayerAttributes.attributes()) {
-			CompoundNBT var2 = new CompoundNBT();
+			CompoundTag var2 = new CompoundTag();
 			
 			var2.putString("Name", var.toString());
 			var2.putFloat("Value", (float)get(par0, var));
@@ -390,7 +390,7 @@ public class AttributesCapability implements IPlayerAttributes {
 		
 		var0.put("Data", var1);
 		
-		Registry.NETWORK.sendTo(new SyncPlayerAttributes(var0, this.offset, this.scale), ((ServerPlayerEntity)par0).connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
+		Registry.NETWORK.sendTo(new SyncPlayerAttributes(var0, this.offset, this.scale), ((ServerPlayer)par0).connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
 	}
 	
 	/**
@@ -398,7 +398,7 @@ public class AttributesCapability implements IPlayerAttributes {
 	 * @param par0
 	 * @param par1
 	 */
-	public void putEquipment(EquipmentSlotType par0, ItemStack par1) {
+	public void putEquipment(EquipmentSlot par0, ItemStack par1) {
 		this.equipmentStore.put(par0, par1);
 	}
 	
@@ -406,7 +406,7 @@ public class AttributesCapability implements IPlayerAttributes {
 	 * @param par0
 	 * @return The ItemStack for this equipment
 	 */
-	public ItemStack getEquipment(EquipmentSlotType par0) {
+	public ItemStack getEquipment(EquipmentSlot par0) {
 		return this.equipmentStore.getOrDefault(par0, ItemStack.EMPTY);
 	}
 }

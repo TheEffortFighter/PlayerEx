@@ -13,28 +13,28 @@ import com.github.clevernucleus.playerex.client.ClientRegistry;
 import com.github.clevernucleus.playerex.init.Registry;
 import com.github.clevernucleus.playerex.init.container.SwitchScreens;
 import com.google.common.collect.Sets;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.datafixers.util.Pair;
 
-import net.minecraft.client.MainWindow;
+import com.mojang.blaze3d.platform.Window;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.player.ClientPlayerEntity;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.gui.screen.inventory.InventoryScreen;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.IJumpingMount;
-import net.minecraft.entity.IRideable;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.EffectType;
-import net.minecraft.potion.Effects;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.PlayerRideableJumping;
+import net.minecraft.world.entity.ItemSteerable;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffectCategory;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -46,16 +46,16 @@ public class ClientEventHandler {
 	private static final Set<ElementType> HEALTH_BAR = Sets.immutableEnumSet(ElementType.HEALTH, ElementType.HEALTHMOUNT);
 	private static final BiFunction<String, Float, String> FORMAT = (par0, par1) -> (new DecimalFormat(par0)).format(par1);
 	
-	private static boolean isRidingJumpable(ClientPlayerEntity par0) {
+	private static boolean isRidingJumpable(LocalPlayer par0) {
 		Entity var0 = par0.getVehicle();
 		
-		return par0.isPassenger() && var0 instanceof IJumpingMount;
+		return par0.isPassenger() && var0 instanceof PlayerRideableJumping;
 	}
 	
-	private static boolean isRiding(ClientPlayerEntity par0) {
+	private static boolean isRiding(LocalPlayer par0) {
 		Entity var0 = par0.getVehicle();
 		
-		return par0.isPassenger() && var0 instanceof IRideable;
+		return par0.isPassenger() && var0 instanceof ItemSteerable;
 	}
 	
 	private static boolean isFoodItem(ItemStack par0) {
@@ -65,30 +65,30 @@ public class ClientEventHandler {
 	private static boolean isRotten(ItemStack par0) {
 		if(!isFoodItem(par0)) return false;
 		
-		for(Pair<EffectInstance, Float> var : par0.getItem().getFoodProperties().getEffects()) {
-			if(var.getFirst() != null && var.getFirst().getEffect() != null && var.getFirst().getEffect().getCategory() == EffectType.HARMFUL) return true;
+		for(Pair<MobEffectInstance, Float> var : par0.getItem().getFoodProperties().getEffects()) {
+			if(var.getFirst() != null && var.getFirst().getEffect() != null && var.getFirst().getEffect().getCategory() == MobEffectCategory.HARMFUL) return true;
 		}
 		
 		return false;
 	}
 	
-	private static int healthLat(final PlayerEntity par0) {
-		if(par0.hasEffect(Effects.WITHER)) return 213;
-		if(par0.hasEffect(Effects.POISON)) return 205;
+	private static int healthLat(final Player par0) {
+		if(par0.hasEffect(MobEffects.WITHER)) return 213;
+		if(par0.hasEffect(MobEffects.POISON)) return 205;
 		//if(par0.isPotionActive(Effects.FROSTBITE)) return 221; TODO
-		if(par0.hasEffect(Effects.ABSORPTION)) return 197;
+		if(par0.hasEffect(MobEffects.ABSORPTION)) return 197;
 		
 		return 189;
 	}
 	
-	private static void drawHealthBar(MatrixStack par0, Minecraft par1, boolean par2) {
+	private static void drawHealthBar(PoseStack par0, Minecraft par1, boolean par2) {
 		if(par1 == null) return;
 		
-		ClientPlayerEntity var0 = par1.player;
+		LocalPlayer var0 = par1.player;
 		
 		if(var0 == null) return;
 		
-		MainWindow var1 = par1.getWindow();
+		Window var1 = par1.getWindow();
 		int varX = var1.getGuiScaledWidth();
 		int varY = var1.getGuiScaledHeight();
 		
@@ -102,7 +102,7 @@ public class ClientEventHandler {
 			return;
 		}
 		
-		FontRenderer var2 = par1.font;
+		Font var2 = par1.font;
 		String var3 = FORMAT.apply("#.##", var0.getHealth() + var0.getAbsorptionAmount()) + "/" + FORMAT.apply("#.##", var0.getMaxHealth());
 		
 		int var4 = (varX - var2.width(var3)) / 2;
@@ -115,14 +115,14 @@ public class ClientEventHandler {
 		GL11.glPopMatrix();
 	}
 	
-	private static void drawRidingHealthBar(MatrixStack par0, Minecraft par1, boolean par2) {
+	private static void drawRidingHealthBar(PoseStack par0, Minecraft par1, boolean par2) {
 		if(par1 == null) return;
 		
-		ClientPlayerEntity var0 = par1.player;
+		LocalPlayer var0 = par1.player;
 		
 		if(var0 == null) return;
 		
-		MainWindow var1 = par1.getWindow();
+		Window var1 = par1.getWindow();
 		int varX = var1.getGuiScaledWidth();
 		int varY = var1.getGuiScaledHeight();
 		
@@ -141,7 +141,7 @@ public class ClientEventHandler {
 				return;
 			}
 			
-			FontRenderer var4 = par1.font;
+			Font var4 = par1.font;
 			String var5 = FORMAT.apply("#.##", var3.getHealth() + var3.getAbsorptionAmount()) + "/" + FORMAT.apply("#.##", var3.getMaxHealth());
 			
 			int var6 = (varX - var4.width(var5)) / 2;
@@ -155,14 +155,14 @@ public class ClientEventHandler {
 		}
 	}
 	
-	private static void drawHorseJumpBar(MatrixStack par0, Minecraft par1) {
+	private static void drawHorseJumpBar(PoseStack par0, Minecraft par1) {
 		if(par1 == null) return;
 		
-		ClientPlayerEntity var0 = par1.player;
+		LocalPlayer var0 = par1.player;
 		
 		if(var0 == null) return;
 		
-		MainWindow var1 = par1.getWindow();
+		Window var1 = par1.getWindow();
 		int varX = var1.getGuiScaledWidth();
 		int varY = var1.getGuiScaledHeight();
 		
@@ -181,14 +181,14 @@ public class ClientEventHandler {
 		}
 	}
 	
-	private static void drawLevelBar(MatrixStack par0, Minecraft par1, boolean par2) {
+	private static void drawLevelBar(PoseStack par0, Minecraft par1, boolean par2) {
 		if(par1 == null) return;
 		
-		ClientPlayerEntity var0 = par1.player;
+		LocalPlayer var0 = par1.player;
 		
 		if(var0 == null) return;
 		
-		MainWindow var1 = par1.getWindow();
+		Window var1 = par1.getWindow();
 		int varX = var1.getGuiScaledWidth();
 		int varY = var1.getGuiScaledHeight();
 		
@@ -221,7 +221,7 @@ public class ClientEventHandler {
 			return;
 		}
 		
-		FontRenderer var2 = par1.font;
+		Font var2 = par1.font;
 		ExAPI.playerAttributes(var0).ifPresent(var -> {
 			int var3 = 0, var4 = 0, var5 = varY - 36;
 			
@@ -246,20 +246,20 @@ public class ClientEventHandler {
 		});
 	}
 	
-	private static void drawUtilsBar(MatrixStack par0, Minecraft par1, boolean par2) {
+	private static void drawUtilsBar(PoseStack par0, Minecraft par1, boolean par2) {
 		if(par1 == null) return;
 		
-		ClientPlayerEntity var0 = par1.player;
+		LocalPlayer var0 = par1.player;
 		
 		if(var0 == null) return;
 		
-		MainWindow var1 = par1.getWindow();
+		Window var1 = par1.getWindow();
 		int varX = var1.getGuiScaledWidth();
 		int varY = var1.getGuiScaledHeight();
 		int var2 = var0.getFoodData().getFoodLevel();
 		int var3 = (int)(100F * Math.max((float)var0.getAirSupply(), 0F) / (float)var0.getMaxAirSupply());
 		float var4 = var0.getFoodData().getSaturationLevel();
-		boolean var5 = var0.hasEffect(Effects.HUNGER);
+		boolean var5 = var0.hasEffect(MobEffects.HUNGER);
 		boolean var6 = ClientConfig.CLIENT.enableFoodInfo.get().booleanValue();
 		
 		ItemStack var7 = var0.getMainHandItem();
@@ -272,7 +272,7 @@ public class ClientEventHandler {
 		if(par2) {
 			boolean var12 = var5 || (var9 > 0 && var2 < 20 && var11 && var6);
 			
-			par1.getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
+			par1.getTextureManager().bind(GuiComponent.GUI_ICONS_LOCATION);
 			par1.gui.blit(par0, (varX / 2) + 12, varY - 38, var12 ? 133 : 16, 27, 9, 9);
 			par1.gui.blit(par0, (varX / 2) + 12, varY - 38, var12 ? 88 : 52, 27, 9, 9);
 			par1.gui.blit(par0, (varX / 2) + (var3 < 100 ? 44 : 50), varY - 38, 34, 9, 9, 9);
@@ -294,7 +294,7 @@ public class ClientEventHandler {
 			return;
 		}
 		
-		FontRenderer var12 = par1.font;
+		Font var12 = par1.font;
 		ExAPI.playerAttributes(var0).ifPresent(var -> {
 			int var13 = Math.round((float)var.get(var0, PlayerAttributes.ARMOR));
 			
@@ -322,7 +322,7 @@ public class ClientEventHandler {
 					int var24 = 0xFFFFFF;
 					int var25 = var23 << 24 & -var24;
 					
-					var12.draw(par0, new StringTextComponent(var20), 1.25F * ((varX / 2) + 22), 1.25F * (varY - 36F), var24 | var25);
+					var12.draw(par0, new TextComponent(var20), 1.25F * ((varX / 2) + 22), 1.25F * (varY - 36F), var24 | var25);
 				}
 				
 				GlStateManager._disableBlend();
@@ -347,7 +347,7 @@ public class ClientEventHandler {
 		Screen var0 = par0.getGui();
 		
 		if(var0 instanceof InventoryScreen) {
-			ContainerScreen<?> var1 = (ContainerScreen<?>)var0;
+			AbstractContainerScreen<?> var1 = (AbstractContainerScreen<?>)var0;
 			
 			if(par0.getWidgetList() != null) {
 				par0.addWidget(new TexturedButton(var1, ClientConfig.CLIENT.guiButtonX.get().intValue(), ClientConfig.CLIENT.guiButtonY.get().intValue(), 14, 13, 176, 0, 0, (var2, var3) -> {
@@ -368,8 +368,8 @@ public class ClientEventHandler {
 		if(!ClientConfig.CLIENT.enableHUD.get().booleanValue()) return;
 		
 		ElementType var0 = par0.getType();
-		MatrixStack var1 = par0.getMatrixStack();
-		ClientPlayerEntity var2 = Minecraft.getInstance().player;
+		PoseStack var1 = par0.getMatrixStack();
+		LocalPlayer var2 = Minecraft.getInstance().player;
 		
 		if(UTILS_BAR.contains(var0)) {
 			par0.setCanceled(true);
@@ -400,7 +400,7 @@ public class ClientEventHandler {
 			}
 		}
 		
-		Minecraft.getInstance().getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
+		Minecraft.getInstance().getTextureManager().bind(GuiComponent.GUI_ICONS_LOCATION);
 	}
 	
 	/**
@@ -411,8 +411,8 @@ public class ClientEventHandler {
 	public static void onHUDRenderPost(final net.minecraftforge.client.event.RenderGameOverlayEvent.Post par0) {
 		if(!ClientConfig.CLIENT.enableHUD.get().booleanValue()) return;
 		
-		MatrixStack var0 = par0.getMatrixStack();
-		ClientPlayerEntity var1 = Minecraft.getInstance().player;
+		PoseStack var0 = par0.getMatrixStack();
+		LocalPlayer var1 = Minecraft.getInstance().player;
 		
 		if(par0.getType() == ElementType.HOTBAR) return;
 		if(var1.isCreative() || var1.isSpectator()) return;

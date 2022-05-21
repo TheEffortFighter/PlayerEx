@@ -3,7 +3,7 @@ package com.github.clevernucleus.playerex.client.gui;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
 
 import com.github.clevernucleus.playerex.api.ExAPI;
@@ -13,17 +13,17 @@ import com.github.clevernucleus.playerex.api.client.ClientReg;
 import com.github.clevernucleus.playerex.api.client.Page;
 import com.github.clevernucleus.playerex.init.Registry;
 import com.github.clevernucleus.playerex.init.capability.AddPlayerAttributes;
-import net.minecraft.client.gui.screen.inventory.ContainerScreen;
-import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.TranslatableComponent;
 
 public class DefaultPage extends Page {
 	
@@ -34,277 +34,277 @@ public class DefaultPage extends Page {
 	private final DecimalFormat text = new DecimalFormat("##.##");
 	
 	private final DynamicTextComponent level = new DynamicTextComponent(20, 50, (par0, par1) -> {
-		TranslationTextComponent var0 = new TranslationTextComponent(ExAPI.MODID + ".attribute.level", (int)par1.get(par0, PlayerAttributes.LEVEL), (int)(100 * par1.expCoeff(par0)), "%");
+		TranslatableComponent var0 = new TranslatableComponent(ExAPI.MODID + ".attribute.level", (int)par1.get(par0, PlayerAttributes.LEVEL), (int)(100 * par1.expCoeff(par0)), "%");
 		
 		return var0.getString();
 	}, (par0, par1) -> {
-		List<ITextComponent> var0 = new ArrayList<ITextComponent>();
+		List<Component> var0 = new ArrayList<Component>();
 		
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.level.alt")));
+		var0.add(new TextComponent(ChatFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.level.alt")));
 		
-		ClientReg.getTooltips(PlayerAttributes.LEVEL.registryName()).forEach(var -> var0.add(new StringTextComponent(var.apply(par0, par1))));
+		ClientReg.getTooltips(PlayerAttributes.LEVEL.registryName()).forEach(var -> var0.add(new TextComponent(var.apply(par0, par1))));
 		
 		return var0;
 	});
 	
 	private final DynamicTextComponent skillPoints = new DynamicTextComponent(20, 62, (par0, par1) -> {
-		TranslationTextComponent var0 = new TranslationTextComponent(ExAPI.MODID + ".attribute.skillpoints", (int)par1.get(par0, PlayerAttributes.SKILLPOINTS));
+		TranslatableComponent var0 = new TranslatableComponent(ExAPI.MODID + ".attribute.skillpoints", (int)par1.get(par0, PlayerAttributes.SKILLPOINTS));
 		
 		return var0.getString();
 	}, (par0, par1) -> {
-		List<ITextComponent> var0 = new ArrayList<ITextComponent>();
+		List<Component> var0 = new ArrayList<Component>();
 		
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.skillpoints.alt")));
+		var0.add(new TextComponent(ChatFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.skillpoints.alt")));
 		
-		ClientReg.getTooltips(PlayerAttributes.SKILLPOINTS.registryName()).forEach(var -> var0.add(new StringTextComponent(var.apply(par0, par1))));
+		ClientReg.getTooltips(PlayerAttributes.SKILLPOINTS.registryName()).forEach(var -> var0.add(new TextComponent(var.apply(par0, par1))));
 		
 		return var0;
 	});
 	private final DynamicTextComponent constitution = new DynamicTextComponent(30, 86, (par0, par1) -> {
-		TranslationTextComponent var0 = new TranslationTextComponent(ExAPI.MODID + ".attribute.constitution", (int)par1.get(par0, PlayerAttributes.CONSTITUTION));
+		TranslatableComponent var0 = new TranslatableComponent(ExAPI.MODID + ".attribute.constitution", (int)par1.get(par0, PlayerAttributes.CONSTITUTION));
 		
 		return var0.getString();
 	}, (par0, par1) -> {
-		List<ITextComponent> var0 = new ArrayList<ITextComponent>();
+		List<Component> var0 = new ArrayList<Component>();
 		
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.constitution.alt0")));
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.constitution.alt1")));
+		var0.add(new TextComponent(ChatFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.constitution.alt0")));
+		var0.add(new TextComponent(ChatFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.constitution.alt1")));
 		
-		ClientReg.getTooltips(PlayerAttributes.CONSTITUTION.registryName()).forEach(var -> var0.add(new StringTextComponent(var.apply(par0, par1))));
+		ClientReg.getTooltips(PlayerAttributes.CONSTITUTION.registryName()).forEach(var -> var0.add(new TextComponent(var.apply(par0, par1))));
 		
 		return var0;
 	});
 	private final DynamicTextComponent strength = new DynamicTextComponent(30, 110, (par0, par1) -> {
-		TranslationTextComponent var0 = new TranslationTextComponent(ExAPI.MODID + ".attribute.strength", (int)par1.get(par0, PlayerAttributes.STRENGTH));
+		TranslatableComponent var0 = new TranslatableComponent(ExAPI.MODID + ".attribute.strength", (int)par1.get(par0, PlayerAttributes.STRENGTH));
 		
 		return var0.getString();
 	}, (par0, par1) -> {
-		List<ITextComponent> var0 = new ArrayList<ITextComponent>();
+		List<Component> var0 = new ArrayList<Component>();
 		
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.strength.alt0")));
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.strength.alt1")));
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.strength.alt2")));
+		var0.add(new TextComponent(ChatFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.strength.alt0")));
+		var0.add(new TextComponent(ChatFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.strength.alt1")));
+		var0.add(new TextComponent(ChatFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.strength.alt2")));
 		
-		ClientReg.getTooltips(PlayerAttributes.STRENGTH.registryName()).forEach(var -> var0.add(new StringTextComponent(var.apply(par0, par1))));
+		ClientReg.getTooltips(PlayerAttributes.STRENGTH.registryName()).forEach(var -> var0.add(new TextComponent(var.apply(par0, par1))));
 		
 		return var0;
 	});
 	private final DynamicTextComponent dexterity = new DynamicTextComponent(30, 134, (par0, par1) -> {
-		TranslationTextComponent var0 = new TranslationTextComponent(ExAPI.MODID + ".attribute.dexterity", (int)par1.get(par0, PlayerAttributes.DEXTERITY));
+		TranslatableComponent var0 = new TranslatableComponent(ExAPI.MODID + ".attribute.dexterity", (int)par1.get(par0, PlayerAttributes.DEXTERITY));
 		
 		return var0.getString();
 	}, (par0, par1) -> {
-		List<ITextComponent> var0 = new ArrayList<ITextComponent>();
+		List<Component> var0 = new ArrayList<Component>();
 		
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.dexterity.alt0")));
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.dexterity.alt1")));
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.dexterity.alt2")));
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.dexterity.alt3")));
+		var0.add(new TextComponent(ChatFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.dexterity.alt0")));
+		var0.add(new TextComponent(ChatFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.dexterity.alt1")));
+		var0.add(new TextComponent(ChatFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.dexterity.alt2")));
+		var0.add(new TextComponent(ChatFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.dexterity.alt3")));
 		
-		ClientReg.getTooltips(PlayerAttributes.DEXTERITY.registryName()).forEach(var -> var0.add(new StringTextComponent(var.apply(par0, par1))));
+		ClientReg.getTooltips(PlayerAttributes.DEXTERITY.registryName()).forEach(var -> var0.add(new TextComponent(var.apply(par0, par1))));
 		
 		return var0;
 	});
 	private final DynamicTextComponent intelligence = new DynamicTextComponent(30, 158, (par0, par1) -> {
-		TranslationTextComponent var0 = new TranslationTextComponent(ExAPI.MODID + ".attribute.intelligence", (int)par1.get(par0, PlayerAttributes.INTELLIGENCE));
+		TranslatableComponent var0 = new TranslatableComponent(ExAPI.MODID + ".attribute.intelligence", (int)par1.get(par0, PlayerAttributes.INTELLIGENCE));
 		
 		return var0.getString();
 	}, (par0, par1) -> {
-		List<ITextComponent> var0 = new ArrayList<ITextComponent>();
+		List<Component> var0 = new ArrayList<Component>();
 		
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.intelligence.alt0")));
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.intelligence.alt1")));
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.intelligence.alt2")));
+		var0.add(new TextComponent(ChatFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.intelligence.alt0")));
+		var0.add(new TextComponent(ChatFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.intelligence.alt1")));
+		var0.add(new TextComponent(ChatFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.intelligence.alt2")));
 		
-		ClientReg.getTooltips(PlayerAttributes.INTELLIGENCE.registryName()).forEach(var -> var0.add(new StringTextComponent(var.apply(par0, par1))));
+		ClientReg.getTooltips(PlayerAttributes.INTELLIGENCE.registryName()).forEach(var -> var0.add(new TextComponent(var.apply(par0, par1))));
 		
 		return var0;
 	});
 	private final DynamicTextComponent luckiness = new DynamicTextComponent(30, 182, (par0, par1) -> {
-		TranslationTextComponent var0 = new TranslationTextComponent(ExAPI.MODID + ".attribute.luckiness", (int)par1.get(par0, PlayerAttributes.LUCKINESS));
+		TranslatableComponent var0 = new TranslatableComponent(ExAPI.MODID + ".attribute.luckiness", (int)par1.get(par0, PlayerAttributes.LUCKINESS));
 		
 		return var0.getString();
 	}, (par0, par1) -> {
-		List<ITextComponent> var0 = new ArrayList<ITextComponent>();
+		List<Component> var0 = new ArrayList<Component>();
 		
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.luckiness.alt0")));
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.luckiness.alt1")));
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.luckiness.alt2")));
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.luckiness.alt3")));
+		var0.add(new TextComponent(ChatFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.luckiness.alt0")));
+		var0.add(new TextComponent(ChatFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.luckiness.alt1")));
+		var0.add(new TextComponent(ChatFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.luckiness.alt2")));
+		var0.add(new TextComponent(ChatFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.luckiness.alt3")));
 		
-		ClientReg.getTooltips(PlayerAttributes.LUCKINESS.registryName()).forEach(var -> var0.add(new StringTextComponent(var.apply(par0, par1))));
+		ClientReg.getTooltips(PlayerAttributes.LUCKINESS.registryName()).forEach(var -> var0.add(new TextComponent(var.apply(par0, par1))));
 		
 		return var0;
 	});
 	private final DynamicTextComponent health = new DynamicTextComponent(130, 50, (par0, par1) -> {
-		TranslationTextComponent var0 = new TranslationTextComponent(ExAPI.MODID + ".attribute.health", text.format((par0.getHealth() + par0.getAbsorptionAmount())), text.format(par0.getMaxHealth()));
+		TranslatableComponent var0 = new TranslatableComponent(ExAPI.MODID + ".attribute.health", text.format((par0.getHealth() + par0.getAbsorptionAmount())), text.format(par0.getMaxHealth()));
 		
 		return var0.getString();
 	}, (par0, par1) -> {
-		List<ITextComponent> var0 = new ArrayList<ITextComponent>();
+		List<Component> var0 = new ArrayList<Component>();
 		
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.health.alt0")));
-		var0.add(new StringTextComponent(" "));
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.health.alt1") + text.format(((400D / 9D) * par1.get(par0, PlayerAttributes.HEALTH_REGEN))) + "/s"));
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.health.alt2") + text.format(100D * par1.get(par0, PlayerAttributes.HEALTH_REGEN_AMP)) + "%"));
+		var0.add(new TextComponent(ChatFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.health.alt0")));
+		var0.add(new TextComponent(" "));
+		var0.add(new TextComponent(ChatFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.health.alt1") + text.format(((400D / 9D) * par1.get(par0, PlayerAttributes.HEALTH_REGEN))) + "/s"));
+		var0.add(new TextComponent(ChatFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.health.alt2") + text.format(100D * par1.get(par0, PlayerAttributes.HEALTH_REGEN_AMP)) + "%"));
 		
-		ClientReg.getTooltips(PlayerAttributes.MAX_HEALTH.registryName()).forEach(var -> var0.add(new StringTextComponent(var.apply(par0, par1))));
+		ClientReg.getTooltips(PlayerAttributes.MAX_HEALTH.registryName()).forEach(var -> var0.add(new TextComponent(var.apply(par0, par1))));
 		
 		return var0;
 	});
 	private final DynamicTextComponent armor = new DynamicTextComponent(130, 62, (par0, par1) -> {
 		String var0 = text.format(par1.get(par0, PlayerAttributes.ARMOR));
-		TranslationTextComponent var1 = new TranslationTextComponent(ExAPI.MODID + ".attribute.armor", var0);
+		TranslatableComponent var1 = new TranslatableComponent(ExAPI.MODID + ".attribute.armor", var0);
 		
 		return var1.getString();
 	}, (par0, par1) -> {
-		List<ITextComponent> var0 = new ArrayList<ITextComponent>();
+		List<Component> var0 = new ArrayList<Component>();
 		String var1 = text.format(par1.get(par0, PlayerAttributes.ARMOR_TOUGHNESS));
 		
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.armor.alt0")));
-		var0.add(new StringTextComponent(" "));
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.armor.alt1") + var1));
+		var0.add(new TextComponent(ChatFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.armor.alt0")));
+		var0.add(new TextComponent(" "));
+		var0.add(new TextComponent(ChatFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.armor.alt1") + var1));
 		
-		ClientReg.getTooltips(PlayerAttributes.ARMOR.registryName()).forEach(var -> var0.add(new StringTextComponent(var.apply(par0, par1))));
+		ClientReg.getTooltips(PlayerAttributes.ARMOR.registryName()).forEach(var -> var0.add(new TextComponent(var.apply(par0, par1))));
 		
 		return var0;
 	});
 	private final DynamicTextComponent attackSpeed = new DynamicTextComponent(130, 74, (par0, par1) -> {
 		String var0 = text.format(par1.get(par0, PlayerAttributes.ATTACK_SPEED));
-		TranslationTextComponent var1 = new TranslationTextComponent(ExAPI.MODID + ".attribute.attack_speed", var0);
+		TranslatableComponent var1 = new TranslatableComponent(ExAPI.MODID + ".attribute.attack_speed", var0);
 		
 		return var1.getString();
 	}, (par0, par1) -> {
-		List<ITextComponent> var0 = new ArrayList<ITextComponent>();
+		List<Component> var0 = new ArrayList<Component>();
 		
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.attack_speed.alt")));
+		var0.add(new TextComponent(ChatFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.attack_speed.alt")));
 		
-		ClientReg.getTooltips(PlayerAttributes.ATTACK_SPEED.registryName()).forEach(var -> var0.add(new StringTextComponent(var.apply(par0, par1))));
+		ClientReg.getTooltips(PlayerAttributes.ATTACK_SPEED.registryName()).forEach(var -> var0.add(new TextComponent(var.apply(par0, par1))));
 		
 		return var0;
 	});
 	private final DynamicTextComponent melee = new DynamicTextComponent(130, 86, (par0, par1) -> {
-		TranslationTextComponent var0 = new TranslationTextComponent(ExAPI.MODID + ".attribute.melee", text.format(par1.get(par0, PlayerAttributes.MELEE_DAMAGE)));
+		TranslatableComponent var0 = new TranslatableComponent(ExAPI.MODID + ".attribute.melee", text.format(par1.get(par0, PlayerAttributes.MELEE_DAMAGE)));
 		
 		return var0.getString();
 	}, (par0, par1) -> {
-		List<ITextComponent> var0 = new ArrayList<ITextComponent>();
+		List<Component> var0 = new ArrayList<Component>();
 		
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.melee.alt0") + text.format(100D + (100D * par1.get(par0, PlayerAttributes.MELEE_CRIT_DAMAGE))) + "%"));
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.melee.alt1") + text.format(100D * par1.get(par0, PlayerAttributes.MELEE_CRIT_CHANCE)) + "%"));
+		var0.add(new TextComponent(ChatFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.melee.alt0") + text.format(100D + (100D * par1.get(par0, PlayerAttributes.MELEE_CRIT_DAMAGE))) + "%"));
+		var0.add(new TextComponent(ChatFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.melee.alt1") + text.format(100D * par1.get(par0, PlayerAttributes.MELEE_CRIT_CHANCE)) + "%"));
 		
-		ClientReg.getTooltips(PlayerAttributes.MELEE_DAMAGE.registryName()).forEach(var -> var0.add(new StringTextComponent(var.apply(par0, par1))));
+		ClientReg.getTooltips(PlayerAttributes.MELEE_DAMAGE.registryName()).forEach(var -> var0.add(new TextComponent(var.apply(par0, par1))));
 		
 		return var0;
 	});
 	private final DynamicTextComponent ranged = new DynamicTextComponent(130, 98, (par0, par1) -> {
-		TranslationTextComponent var0 = new TranslationTextComponent(ExAPI.MODID + ".attribute.ranged", text.format(par1.get(par0, PlayerAttributes.RANGED_DAMAGE)));
+		TranslatableComponent var0 = new TranslatableComponent(ExAPI.MODID + ".attribute.ranged", text.format(par1.get(par0, PlayerAttributes.RANGED_DAMAGE)));
 		
 		return var0.getString();
 	}, (par0, par1) -> {
-		List<ITextComponent> var0 = new ArrayList<ITextComponent>();
+		List<Component> var0 = new ArrayList<Component>();
 		
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.ranged.alt0") + text.format(100D + (100D * par1.get(par0, PlayerAttributes.RANGED_CRIT_DAMAGE))) + "%"));
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.ranged.alt1") + text.format(100D * par1.get(par0, PlayerAttributes.RANGED_CRIT_CHANCE)) + "%"));
+		var0.add(new TextComponent(ChatFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.ranged.alt0") + text.format(100D + (100D * par1.get(par0, PlayerAttributes.RANGED_CRIT_DAMAGE))) + "%"));
+		var0.add(new TextComponent(ChatFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.ranged.alt1") + text.format(100D * par1.get(par0, PlayerAttributes.RANGED_CRIT_CHANCE)) + "%"));
 		
-		ClientReg.getTooltips(PlayerAttributes.RANGED_DAMAGE.registryName()).forEach(var -> var0.add(new StringTextComponent(var.apply(par0, par1))));
+		ClientReg.getTooltips(PlayerAttributes.RANGED_DAMAGE.registryName()).forEach(var -> var0.add(new TextComponent(var.apply(par0, par1))));
 		
 		return var0;
 	});
 	private final DynamicTextComponent evasion = new DynamicTextComponent(130, 110, (par0, par1) -> {
-		TranslationTextComponent var0 = new TranslationTextComponent(ExAPI.MODID + ".attribute.evasion", text.format(100D * par1.get(par0, PlayerAttributes.EVASION)), "%");
+		TranslatableComponent var0 = new TranslatableComponent(ExAPI.MODID + ".attribute.evasion", text.format(100D * par1.get(par0, PlayerAttributes.EVASION)), "%");
 		
 		return var0.getString();
 	}, (par0, par1) -> {
-		List<ITextComponent> var0 = new ArrayList<ITextComponent>();
+		List<Component> var0 = new ArrayList<Component>();
 		
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.evasion.alt")));
+		var0.add(new TextComponent(ChatFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.evasion.alt")));
 		
-		ClientReg.getTooltips(PlayerAttributes.EVASION.registryName()).forEach(var -> var0.add(new StringTextComponent(var.apply(par0, par1))));
+		ClientReg.getTooltips(PlayerAttributes.EVASION.registryName()).forEach(var -> var0.add(new TextComponent(var.apply(par0, par1))));
 		
 		return var0;
 	});
 	private final DynamicTextComponent lifesteal = new DynamicTextComponent(130, 122, (par0, par1) -> {
-		TranslationTextComponent var0 = new TranslationTextComponent(ExAPI.MODID + ".attribute.lifesteal", text.format(100D * par1.get(par0, PlayerAttributes.LIFESTEAL)), "%");
+		TranslatableComponent var0 = new TranslatableComponent(ExAPI.MODID + ".attribute.lifesteal", text.format(100D * par1.get(par0, PlayerAttributes.LIFESTEAL)), "%");
 		
 		return var0.getString();
 	}, (par0, par1) -> {
-		List<ITextComponent> var0 = new ArrayList<ITextComponent>();
+		List<Component> var0 = new ArrayList<Component>();
 		
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.lifesteal.alt")));
+		var0.add(new TextComponent(ChatFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.lifesteal.alt")));
 		
-		ClientReg.getTooltips(PlayerAttributes.LIFESTEAL.registryName()).forEach(var -> var0.add(new StringTextComponent(var.apply(par0, par1))));
+		ClientReg.getTooltips(PlayerAttributes.LIFESTEAL.registryName()).forEach(var -> var0.add(new TextComponent(var.apply(par0, par1))));
 		
 		return var0;
 	});
 	private final DynamicTextComponent luck = new DynamicTextComponent(130, 134, (par0, par1) -> {
-		TranslationTextComponent var0 = new TranslationTextComponent(ExAPI.MODID + ".attribute.luck", text.format(par1.get(par0, PlayerAttributes.LUCK)));
+		TranslatableComponent var0 = new TranslatableComponent(ExAPI.MODID + ".attribute.luck", text.format(par1.get(par0, PlayerAttributes.LUCK)));
 		
 		return var0.getString();
 	}, (par0, par1) -> {
-		List<ITextComponent> var0 = new ArrayList<ITextComponent>();
+		List<Component> var0 = new ArrayList<Component>();
 		
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.luck.alt")));
+		var0.add(new TextComponent(ChatFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.luck.alt")));
 		
-		ClientReg.getTooltips(PlayerAttributes.LUCK.registryName()).forEach(var -> var0.add(new StringTextComponent(var.apply(par0, par1))));
+		ClientReg.getTooltips(PlayerAttributes.LUCK.registryName()).forEach(var -> var0.add(new TextComponent(var.apply(par0, par1))));
 		
 		return var0;
 	});
 	private final DynamicTextComponent gravity = new DynamicTextComponent(130, 146, (par0, par1) -> {
-		TranslationTextComponent var0 = new TranslationTextComponent(ExAPI.MODID + ".attribute.gravity", text.format(par1.get(par0, PlayerAttributes.GRAVITY)));
+		TranslatableComponent var0 = new TranslatableComponent(ExAPI.MODID + ".attribute.gravity", text.format(par1.get(par0, PlayerAttributes.GRAVITY)));
 		
 		return var0.getString();
 	}, (par0, par1) -> {
-		List<ITextComponent> var0 = new ArrayList<ITextComponent>();
+		List<Component> var0 = new ArrayList<Component>();
 		
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.gravity.alt")));
+		var0.add(new TextComponent(ChatFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.gravity.alt")));
 		
-		ClientReg.getTooltips(PlayerAttributes.GRAVITY.registryName()).forEach(var -> var0.add(new StringTextComponent(var.apply(par0, par1))));
+		ClientReg.getTooltips(PlayerAttributes.GRAVITY.registryName()).forEach(var -> var0.add(new TextComponent(var.apply(par0, par1))));
 		
 		return var0;
 	});
 	private final DynamicTextComponent reach = new DynamicTextComponent(130, 158, (par0, par1) -> {
-		TranslationTextComponent var0 = new TranslationTextComponent(ExAPI.MODID + ".attribute.reach_distance", text.format(par1.get(par0, PlayerAttributes.REACH_DISTANCE)));
+		TranslatableComponent var0 = new TranslatableComponent(ExAPI.MODID + ".attribute.reach_distance", text.format(par1.get(par0, PlayerAttributes.REACH_DISTANCE)));
 		
 		return var0.getString();
 	}, (par0, par1) -> {
-		List<ITextComponent> var0 = new ArrayList<ITextComponent>();
+		List<Component> var0 = new ArrayList<Component>();
 		
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.reach_distance.alt")));
+		var0.add(new TextComponent(ChatFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.reach_distance.alt")));
 		
-		ClientReg.getTooltips(PlayerAttributes.REACH_DISTANCE.registryName()).forEach(var -> var0.add(new StringTextComponent(var.apply(par0, par1))));
+		ClientReg.getTooltips(PlayerAttributes.REACH_DISTANCE.registryName()).forEach(var -> var0.add(new TextComponent(var.apply(par0, par1))));
 		
 		return var0;
 	});
 	private final DynamicTextComponent movement = new DynamicTextComponent(130, 170, (par0, par1) -> {
-		TranslationTextComponent var0 = new TranslationTextComponent(ExAPI.MODID + ".attribute.movement_speed", text.format(20D * par1.get(par0, PlayerAttributes.MOVEMENT_SPEED)));
+		TranslatableComponent var0 = new TranslatableComponent(ExAPI.MODID + ".attribute.movement_speed", text.format(20D * par1.get(par0, PlayerAttributes.MOVEMENT_SPEED)));
 		
 		return var0.getString();
 	}, (par0, par1) -> {
-		List<ITextComponent> var0 = new ArrayList<ITextComponent>();
+		List<Component> var0 = new ArrayList<Component>();
 		
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.movement_speed.alt")));
+		var0.add(new TextComponent(ChatFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.movement_speed.alt")));
 		
-		ClientReg.getTooltips(PlayerAttributes.MOVEMENT_SPEED.registryName()).forEach(var -> var0.add(new StringTextComponent(var.apply(par0, par1))));
+		ClientReg.getTooltips(PlayerAttributes.MOVEMENT_SPEED.registryName()).forEach(var -> var0.add(new TextComponent(var.apply(par0, par1))));
 		
 		return var0;
 	});
 	private final DynamicTextComponent swim = new DynamicTextComponent(130, 182, (par0, par1) -> {
-		TranslationTextComponent var0 = new TranslationTextComponent(ExAPI.MODID + ".attribute.swim_speed", text.format(par1.get(par0, PlayerAttributes.SWIM_SPEED)));
+		TranslatableComponent var0 = new TranslatableComponent(ExAPI.MODID + ".attribute.swim_speed", text.format(par1.get(par0, PlayerAttributes.SWIM_SPEED)));
 		
 		return var0.getString();
 	}, (par0, par1) -> {
-		List<ITextComponent> var0 = new ArrayList<ITextComponent>();
+		List<Component> var0 = new ArrayList<Component>();
 		
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.swim_speed.alt")));
+		var0.add(new TextComponent(ChatFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.swim_speed.alt")));
 		
-		ClientReg.getTooltips(PlayerAttributes.SWIM_SPEED.registryName()).forEach(var -> var0.add(new StringTextComponent(var.apply(par0, par1))));
+		ClientReg.getTooltips(PlayerAttributes.SWIM_SPEED.registryName()).forEach(var -> var0.add(new TextComponent(var.apply(par0, par1))));
 		
 		return var0;
 	});
 	
 	public DefaultPage() {
-		super(new TranslationTextComponent(ExAPI.MODID + ".page.player_attributes"));
+		super(new TranslatableComponent(ExAPI.MODID + ".page.player_attributes"));
 		
 		this.dynamicTextComponents.add(this.level);
 		this.dynamicTextComponents.add(this.skillPoints);
@@ -333,24 +333,24 @@ public class DefaultPage extends Page {
 	}
 	
 	@Override
-	public void render(MatrixStack par0, int par1, int par2, float par3) {
+	public void render(PoseStack par0, int par1, int par2, float par3) {
 		super.render(par0, par1, par2, par3);
 		
 		this.dynamicTextComponents.forEach(var -> var.drawAlt(par0, this.font, this.minecraft.player, this.width, this.height, par1, par2));
 	}
 	
 	@Override
-	public void drawGuiContainerForegroundLayer(MatrixStack par0, int par1, int par2) {
+	public void drawGuiContainerForegroundLayer(PoseStack par0, int par1, int par2) {
 		this.font.draw(par0, this.title.getString(), 9F, 9F, 4210752);
 		this.dynamicTextComponents.forEach(var -> var.draw(par0, this.font, this.minecraft.player));
 	}
 	
 	@Override
-	public void drawGuiContainerBackgroundLayer(MatrixStack par0, float par1, int par2, int par3) {
-		PlayerEntity var0 = this.minecraft.player;
+	public void drawGuiContainerBackgroundLayer(PoseStack par0, float par1, int par2, int par3) {
+		Player var0 = this.minecraft.player;
 		
 		ExAPI.playerAttributes(var0).ifPresent(var -> {
-			for(Widget var1 : this.buttons) {
+			for(AbstractWidget var1 : this.buttons) {
 				if(var1 instanceof TexturedButton) {
 					TexturedButton var2 = (TexturedButton)var1;
 					int var3 = var2.getAdditionalData();
@@ -366,7 +366,7 @@ public class DefaultPage extends Page {
 	}
 	
 	@Override
-	protected void init(ContainerScreen<?> par0) {
+	protected void init(AbstractContainerScreen<?> par0) {
 		super.init(par0);
 		
 		for(int var = 0; var < this.idToAttribute.length; var++) {

@@ -3,8 +3,8 @@ package com.github.clevernucleus.playerex.api;
 import com.github.clevernucleus.playerex.api.attribute.IPlayerAttribute;
 import com.github.clevernucleus.playerex.api.attribute.IPlayerAttributes;
 
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.player.Player;
 
 /**
  * Helper class for useful statics.
@@ -35,7 +35,7 @@ public class Util {
 	 * @param par3 Amount to add (can be negative to subtract).
 	 * @param par4 Limit.
 	 */
-	public static void add(IPlayerAttributes par0, PlayerEntity par1, IPlayerAttribute par2, double par3, double par4) {
+	public static void add(IPlayerAttributes par0, Player par1, IPlayerAttribute par2, double par3, double par4) {
 		double var0 = par0.get(par1, par2);
 		double var1 = dim(var0, par3, par4) - var0;
 		
@@ -51,7 +51,7 @@ public class Util {
 	 * @param par4 AttributeModifier value multiplier.
 	 * @param par5 Diminishing value limit (in case of modifier ADDITION function).
 	 */
-	public static void apply(TriFunction<PlayerEntity, IPlayerAttribute, AttributeModifier, IPlayerAttributes> par0, PlayerEntity par1, IPlayerAttribute par2, AttributeModifier par3, double par4, double par5) {
+	public static void apply(TriFunction<Player, IPlayerAttribute, AttributeModifier, IPlayerAttributes> par0, Player par1, IPlayerAttribute par2, AttributeModifier par3, double par4, double par5) {
 		double var0 = par3.getAmount() * par4;
 		
 		if(par3.getOperation() == AttributeModifier.Operation.ADDITION) {
@@ -72,7 +72,7 @@ public class Util {
 	 * @param par3 AttributeModifier.
 	 * @param par4 AttributeModifier value multiplier.
 	 */
-	public static void apply(TriFunction<PlayerEntity, IPlayerAttribute, AttributeModifier, IPlayerAttributes> par0, PlayerEntity par1, IPlayerAttribute par2, AttributeModifier par3, double par4) {
+	public static void apply(TriFunction<Player, IPlayerAttribute, AttributeModifier, IPlayerAttributes> par0, Player par1, IPlayerAttribute par2, AttributeModifier par3, double par4) {
 		AttributeModifier var0 = new AttributeModifier(par3.getId(), par3.getName(), par3.getAmount() * par4, par3.getOperation());
 		
 		par0.apply(par1, par2, var0);

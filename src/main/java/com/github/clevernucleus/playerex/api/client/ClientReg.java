@@ -12,23 +12,23 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 
 import com.github.clevernucleus.playerex.api.attribute.IPlayerAttributes;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.network.chat.TextComponent;
 
 /**
  * Use this to register client side things.
  */
 public class ClientReg {
 	private static final Map<ResourceLocation, Page> INDEX = Maps.newHashMap();
-	private static final Multimap<ResourceLocation, BiFunction<PlayerEntity, IPlayerAttributes, String>> TOOLTIPS = ArrayListMultimap.create();
+	private static final Multimap<ResourceLocation, BiFunction<Player, IPlayerAttributes, String>> TOOLTIPS = ArrayListMultimap.create();
 	
 	/**
 	 * Add to the tooltip of an element.
 	 * @param par0 The IPlayerAttribute's registryName.
 	 * @param par1 The output string to display on the tooltip (dynamic).
 	 */
-	public static void addTooltip(final ResourceLocation par0, BiFunction<PlayerEntity, IPlayerAttributes, String> par1) {
+	public static void addTooltip(final ResourceLocation par0, BiFunction<Player, IPlayerAttributes, String> par1) {
 		TOOLTIPS.put(par0, par1);
 	}
 	
@@ -44,7 +44,7 @@ public class ClientReg {
 	/**
 	 * @return An immutable copy of the TOOLTIPS Multimap.
 	 */
-	public static Multimap<ResourceLocation, BiFunction<PlayerEntity, IPlayerAttributes, String>> tooltips() {
+	public static Multimap<ResourceLocation, BiFunction<Player, IPlayerAttributes, String>> tooltips() {
 		return ImmutableListMultimap.copyOf(TOOLTIPS);
 	}
 	
@@ -52,7 +52,7 @@ public class ClientReg {
 	 * @param par0 Registry name.
 	 * @return Collection of tooltips attached to the input registry name.
 	 */
-	public static Collection<BiFunction<PlayerEntity, IPlayerAttributes, String>> getTooltips(final ResourceLocation par0) {
+	public static Collection<BiFunction<Player, IPlayerAttributes, String>> getTooltips(final ResourceLocation par0) {
 		return ImmutableList.copyOf(TOOLTIPS.asMap().getOrDefault(par0, new ArrayList<>()));
 	}
 	
@@ -61,7 +61,7 @@ public class ClientReg {
 	 * @return The relevant page from the registry.
 	 */
 	public static Page getPage(final ResourceLocation par0) {
-		return INDEX.getOrDefault(par0, new Page(new StringTextComponent("")));
+		return INDEX.getOrDefault(par0, new Page(new TextComponent("")));
 	}
 	
 	/**

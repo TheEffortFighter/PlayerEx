@@ -1,8 +1,8 @@
 package com.github.clevernucleus.playerex.api.attribute;
 
-import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.nbt.CompoundTag;
 
 /**
  * This is the capability interface. Use this to manipulate values.
@@ -14,14 +14,14 @@ public interface IPlayerAttributes {
 	 * @param par0 Player.
 	 * @return A coefficient from 0 to 1 that multiplies with experience to tell us how close we are to the next level.
 	 */
-	double expCoeff(PlayerEntity par0);
+	double expCoeff(Player par0);
 	
 	/**
 	 * @param par0 PlayerEntity instance.
 	 * @param par1 Input IPlayerAttribute instance.
 	 * @return The total value (including any modifiers) for the input IPlayerAttribute instance.
 	 */
-	double get(PlayerEntity par0, IPlayerAttribute par1);
+	double get(Player par0, IPlayerAttribute par1);
 	
 	/**
 	 * Adds/subtracts the input value to the attribute.
@@ -30,7 +30,7 @@ public interface IPlayerAttributes {
 	 * @param par1 Input IPlayerAttribute instance.
 	 * @param par2 Amount to add (can be negative to subtract); is not clamped.
 	 */
-	void add(PlayerEntity par0, IPlayerAttribute par1, double par2);
+	void add(Player par0, IPlayerAttribute par1, double par2);
 	
 	/**
 	 * Similar to {@link #add(PlayerEntity, IPlayerAttribute, double)}, but directly sets the IPlayerAttribute's value to the input, and does not run any registered adders.
@@ -38,7 +38,7 @@ public interface IPlayerAttributes {
 	 * @param par1 Input IPlayerAttribute instance.
 	 * @param par2 Amount to set; is not clamped.
 	 */
-	void forceSet(PlayerEntity par0, IPlayerAttribute par1, double par2);
+	void forceSet(Player par0, IPlayerAttribute par1, double par2);
 	
 	/**
 	 * Applies the input AttributeModifier to the input IPlayerAttribute. The modifier will remain active until it is removed with {@link #removeModifier(PlayerEntity, IPlayerAttribute, AttributeModifier)}.
@@ -50,7 +50,7 @@ public interface IPlayerAttributes {
 	 * @param par2 AttributeModifier input.
 	 * @return the capability instance (pass-through).
 	 */
-	IPlayerAttributes applyModifier(PlayerEntity par0, IPlayerAttribute par1, AttributeModifier par2);
+	IPlayerAttributes applyModifier(Player par0, IPlayerAttribute par1, AttributeModifier par2);
 	
 	/**
 	 * Removes the input AttributeModifier if it exists.
@@ -59,16 +59,16 @@ public interface IPlayerAttributes {
 	 * @param par2 AttributeModifier input.
 	 * @return the capability instance (pass-through).
 	 */
-	IPlayerAttributes removeModifier(PlayerEntity par0, IPlayerAttribute par1, AttributeModifier par2);
+	IPlayerAttributes removeModifier(Player par0, IPlayerAttribute par1, AttributeModifier par2);
 	
 	/**
 	 * @return The capabilities data. Dev's should AVOID using this.
 	 */
-	CompoundNBT write();
+	CompoundTag write();
 	
 	/**
 	 * Takes the input data and sets the capabilities data to it. Dev's should AVOID using this.
 	 * @param par0 Input data.
 	 */
-	void read(CompoundNBT par0);
+	void read(CompoundTag par0);
 }

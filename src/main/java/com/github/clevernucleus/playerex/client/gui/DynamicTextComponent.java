@@ -5,22 +5,22 @@ import java.util.function.BiFunction;
 
 import org.lwjgl.opengl.GL11;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 
 import com.github.clevernucleus.playerex.api.ExAPI;
 import com.github.clevernucleus.playerex.api.attribute.IPlayerAttributes;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.client.gui.Font;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.fml.client.gui.GuiUtils;
 
 public class DynamicTextComponent {
 	private final float scale = 0.7F;
 	private int posX, posY;
-	private BiFunction<PlayerEntity, IPlayerAttributes, String> titleText;
-	private BiFunction<PlayerEntity, IPlayerAttributes, List<ITextComponent>> hoverText;
+	private BiFunction<Player, IPlayerAttributes, String> titleText;
+	private BiFunction<Player, IPlayerAttributes, List<Component>> hoverText;
 	
-	public DynamicTextComponent(int par0, int par1, BiFunction<PlayerEntity, IPlayerAttributes, String> par2, BiFunction<PlayerEntity, IPlayerAttributes, List<ITextComponent>> par3) {
+	public DynamicTextComponent(int par0, int par1, BiFunction<Player, IPlayerAttributes, String> par2, BiFunction<Player, IPlayerAttributes, List<Component>> par3) {
 		this.posX = par0;
 		this.posY = par1;
 		this.titleText = par2;
@@ -31,7 +31,7 @@ public class DynamicTextComponent {
 		return (par0 >= par2 && par1 >= par3 && par0 < par2 + par4 && par1 < par3 + par5);
 	}
 	
-	public void draw(MatrixStack par0, FontRenderer par1, PlayerEntity par2) {
+	public void draw(PoseStack par0, Font par1, Player par2) {
 		ExAPI.playerAttributes(par2).ifPresent(var -> {
 			GL11.glPushMatrix();
 			GL11.glScalef(this.scale, this.scale, this.scale);
@@ -42,7 +42,7 @@ public class DynamicTextComponent {
 		});
 	}
 	
-	public void drawAlt(MatrixStack par0, FontRenderer par1, PlayerEntity par2, int par3, int par4, int par5, int par6) {
+	public void drawAlt(PoseStack par0, Font par1, Player par2, int par3, int par4, int par5, int par6) {
 		int var0 = (int)((float)(par3 - 176) / 2.0F);
 		int var1 = (int)((float)(par4 - 166) / 2.0F);
 		

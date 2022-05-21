@@ -5,13 +5,13 @@ import javax.annotation.Nullable;
 
 import com.github.clevernucleus.playerex.api.ExAPI;
 import com.github.clevernucleus.playerex.api.attribute.IPlayerAttributes;
-import net.minecraft.nbt.INBT;
-import net.minecraft.util.Direction;
+import net.minecraft.nbt.Tag;
+import net.minecraft.core.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ICapabilitySerializable;
 import net.minecraftforge.common.util.LazyOptional;
 
-public class CapabilityProvider implements ICapabilitySerializable<INBT> {
+public class CapabilityProvider implements ICapabilitySerializable<Tag> {
 	private final LazyOptional<IPlayerAttributes> optional;
 	private final IPlayerAttributes data;
 	
@@ -27,12 +27,12 @@ public class CapabilityProvider implements ICapabilitySerializable<INBT> {
     }
     
     @Override
-    public INBT serializeNBT() {
+    public Tag serializeNBT() {
     	return ExAPI.PLAYER_ATTRIBUTES.writeNBT(data, null);
     }
     
     @Override
-    public void deserializeNBT(INBT par0) {
+    public void deserializeNBT(Tag par0) {
     	ExAPI.PLAYER_ATTRIBUTES.readNBT(data, null, par0);
     }
 }

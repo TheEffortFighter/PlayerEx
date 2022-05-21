@@ -9,9 +9,9 @@ import com.github.clevernucleus.playerex.client.gui.PlayerAttributesScreen;
 import com.github.clevernucleus.playerex.client.gui.ResistancePage;
 import com.github.clevernucleus.playerex.init.Registry;
 
-import net.minecraft.client.gui.ScreenManager;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.client.util.InputMappings;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraft.client.KeyMapping;
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.settings.KeyConflictContext;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -19,10 +19,10 @@ import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = ExAPI.MODID, bus = Mod.EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
 public class ClientRegistry {
-	public static final KeyBinding HUD = new KeyBinding("key." + ExAPI.MODID + ".hud", KeyConflictContext.IN_GAME, key(GLFW.GLFW_KEY_LEFT_ALT), "PlayerEx");
+	public static final KeyMapping HUD = new KeyMapping("key." + ExAPI.MODID + ".hud", KeyConflictContext.IN_GAME, key(GLFW.GLFW_KEY_LEFT_ALT), "PlayerEx");
 	
-	private static InputMappings.Input key(int par0) {
-		return InputMappings.Type.KEYSYM.getOrCreate(par0);
+	private static InputConstants.Key key(int par0) {
+		return InputConstants.Type.KEYSYM.getOrCreate(par0);
 	}
 	
 	/**
@@ -31,7 +31,7 @@ public class ClientRegistry {
 	 */
 	@SubscribeEvent
 	public static void clientSetup(final net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent par0) {
-		ScreenManager.register(Registry.ATTRIBUTES_CONTAINER, PlayerAttributesScreen::new);
+		MenuScreens.register(Registry.ATTRIBUTES_CONTAINER, PlayerAttributesScreen::new);
 		net.minecraftforge.fml.client.registry.ClientRegistry.registerKeyBinding(HUD);
 		
 		par0.enqueueWork(() -> {

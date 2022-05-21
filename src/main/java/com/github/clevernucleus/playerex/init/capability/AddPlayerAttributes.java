@@ -11,26 +11,26 @@ import com.mojang.datafixers.util.Pair;
 import com.github.clevernucleus.playerex.api.ExAPI;
 import com.github.clevernucleus.playerex.api.attribute.IPlayerAttribute;
 import com.github.clevernucleus.playerex.api.attribute.PlayerAttributes;
-import net.minecraft.entity.player.ServerPlayerEntity;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraftforge.fml.network.NetworkEvent;
 
 public class AddPlayerAttributes {
-	private CompoundNBT tag;
+	private CompoundTag tag;
 	
 	public AddPlayerAttributes() {}
 	
 	
 	@SafeVarargs
 	public AddPlayerAttributes(Pair<IPlayerAttribute, Float> ... par0) {
-		this.tag = new CompoundNBT();
-		ListNBT var0 = new ListNBT();
+		this.tag = new CompoundTag();
+		ListTag var0 = new ListTag();
 		
 		for(Pair<IPlayerAttribute, Float> var : par0) {
-			CompoundNBT var1 = new CompoundNBT();
+			CompoundTag var1 = new CompoundTag();
 			String var2 = var.getFirst().toString();
 			float var3 = var.getSecond().floatValue();
 			
@@ -46,7 +46,7 @@ public class AddPlayerAttributes {
 	 * Constructor.
 	 * @param par0 Compound tag to send.
 	 */
-	public AddPlayerAttributes(final @Nonnull CompoundNBT par0) {
+	public AddPlayerAttributes(final @Nonnull CompoundTag par0) {
 		this.tag = par0;
 	}
 	
@@ -55,7 +55,7 @@ public class AddPlayerAttributes {
 	 * @param par0 Input packet.
 	 * @param par1 Input buffer
 	 */
-	public static void encode(AddPlayerAttributes par0, PacketBuffer par1) {
+	public static void encode(AddPlayerAttributes par0, FriendlyByteBuf par1) {
 		par1.writeNbt(par0.tag);
 	}
 	
@@ -64,7 +64,7 @@ public class AddPlayerAttributes {
 	 * @param par0 Input buffer.
 	 * @return A new Packet instance.
 	 */
-	public static AddPlayerAttributes decode(PacketBuffer par0) {
+	public static AddPlayerAttributes decode(FriendlyByteBuf par0) {
 		return new AddPlayerAttributes(par0.readNbt());
 	}
 	
@@ -75,14 +75,14 @@ public class AddPlayerAttributes {
 	 */
 	public static void handle(AddPlayerAttributes par0, Supplier<NetworkEvent.Context> par1) {
 		par1.get().enqueueWork(() -> {
-			ServerPlayerEntity var0 = par1.get().getSender();
+			ServerPlayer var0 = par1.get().getSender();
 			
 			if(var0 != null && par0.tag != null) {
-				ListNBT var1 = par0.tag.getList("Attributes", 10);
+				ListTag var1 = par0.tag.getList("Attributes", 10);
 				Map<IPlayerAttribute, Float> var2 = Maps.newHashMap();
 				
-				for(INBT var : var1) {
-					CompoundNBT var3 = (CompoundNBT)var;
+				for(Tag var : var1) {
+					CompoundTag var3 = (CompoundTag)var;
 					IPlayerAttribute var4 = PlayerAttributes.fromRegistryName(var3.getString("Name"));
 					
 					var2.put(var4, var3.getFloat("Value"));
