@@ -11,6 +11,7 @@ import net.minecraftforge.client.gui.GuiUtils;
 import org.lwjgl.opengl.GL11;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BiFunction;
 
 public class DynamicTextComponent {
@@ -32,12 +33,12 @@ public class DynamicTextComponent {
 	
 	public void draw(PoseStack par0, Font par1, Player par2) {
 		ExAPI.playerAttributes(par2).ifPresent(var -> {
-			GL11.glPushMatrix();
-			GL11.glScalef(this.scale, this.scale, this.scale);
+			par0.pushPose();
+			par0.scale(this.scale, this.scale, this.scale);
 			
 			par1.draw(par0, this.titleText.apply(par2, var), this.posX, this.posY, 4210752);
-			
-			GL11.glPopMatrix();
+
+			par0.popPose();
 		});
 	}
 	
@@ -47,6 +48,8 @@ public class DynamicTextComponent {
 		
 		ExAPI.playerAttributes(par2).ifPresent(var -> {
 			if(isHovered(par5, par6, var0 + (int)(this.posX * this.scale), var1 + (int)(this.posY * this.scale), (int)(par1.width(this.titleText.apply(par2, var)) * this.scale), 7)) {
+				List<Component> components = this.hoverText.apply(par2, var);
+				Minecraft.getInstance().screen.renderTooltip(par0, components, Optional.empty(), var0 + (int)(this.posX * this.scale), var1 + (int)(this.posY * this.scale));
 				// GuiUtils.drawHoveringText(par0, this.hoverText.apply(par2, var), par5, par6, par3, par4, -1, par1);// TODO
 			}
 		});

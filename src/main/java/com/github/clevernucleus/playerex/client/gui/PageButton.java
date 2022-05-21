@@ -60,7 +60,7 @@ public class PageButton extends AbstractButton {
 	public void renderButton(PoseStack par0, int par1, int par2, float par3) {
 		Minecraft var0 = Minecraft.getInstance();
 		
-		var0.getTextureManager().bindForSetup(PlayerAttributesScreen.TAB);
+		RenderSystem.setShaderTexture(0, PlayerAttributesScreen.TAB);
 		
 		RenderSystem.disableDepthTest();
 		

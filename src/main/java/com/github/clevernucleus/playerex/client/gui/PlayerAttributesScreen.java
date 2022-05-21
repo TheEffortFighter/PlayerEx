@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 
 import com.github.clevernucleus.playerex.api.ExAPI;
@@ -84,7 +85,7 @@ public class PlayerAttributesScreen extends AbstractContainerScreen<PlayerAttrib
 		int var0 = this.leftPos;
 		int var1 = (this.height - this.imageHeight) / 2;
 		
-		this.minecraft.getTextureManager().bindForSetup(GUI); // TODO??
+		RenderSystem.setShaderTexture(0, GUI);
 		this.blit(par0, var0, var1, 0, 0, this.imageWidth, this.imageHeight);
 		this.activePage.drawGuiContainerBackgroundLayer(par0, par1, par2, par3);
 		this.renderables.forEach(var -> {

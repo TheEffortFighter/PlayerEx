@@ -43,13 +43,11 @@ public class ClientRegistry {
 			ClientReg.registerPage(ResistancePage.REGISTRY_NAME, new ResistancePage());
 		});
 
-
+		updateHudState();
 	}
 
 	public static void updateHudState(){
 		ClientEventHandler.UTILS_BAR.forEach((element) -> OverlayRegistry.enableOverlay(element, !ClientConfig.CLIENT.enableHUD.get()));
 		ClientEventHandler.HEALTH_BAR.forEach((element) -> OverlayRegistry.enableOverlay(element, !ClientConfig.CLIENT.enableHealthBar.get()));
-
-
 	}
 }

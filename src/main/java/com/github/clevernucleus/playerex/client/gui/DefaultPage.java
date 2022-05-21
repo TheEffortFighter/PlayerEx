@@ -13,6 +13,7 @@ import com.github.clevernucleus.playerex.api.client.ClientReg;
 import com.github.clevernucleus.playerex.api.client.Page;
 import com.github.clevernucleus.playerex.init.Registry;
 import com.github.clevernucleus.playerex.init.capability.AddPlayerAttributes;
+import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.resources.language.I18n;
@@ -370,7 +371,7 @@ public class DefaultPage extends Page {
 		super.init(par0);
 		
 		for(int var = 0; var < this.idToAttribute.length; var++) {
-			this.addWidget(new TexturedButton(par0, 8, 58 + (17 * var), 11, 10, 204, 0, var, (var0, var1) -> {
+			this.addRenderableWidget(new TexturedButton(par0, 8, 58 + (17 * var), 11, 10, 204, 0, var, (var0, var1) -> {
 				Registry.NETWORK.sendToServer(new AddPlayerAttributes(Pair.of(this.idToAttribute[var1], 1.0F), Pair.of(PlayerAttributes.SKILLPOINTS, -1.0F)));
 			}));
 		}
