@@ -56,7 +56,7 @@ public class AddPlayerAttributes {
 	 * @param par1 Input buffer
 	 */
 	public static void encode(AddPlayerAttributes par0, PacketBuffer par1) {
-		par1.writeCompoundTag(par0.tag);
+		par1.writeNbt(par0.tag);
 	}
 	
 	/**
@@ -65,7 +65,7 @@ public class AddPlayerAttributes {
 	 * @return A new Packet instance.
 	 */
 	public static AddPlayerAttributes decode(PacketBuffer par0) {
-		return new AddPlayerAttributes(par0.readCompoundTag());
+		return new AddPlayerAttributes(par0.readNbt());
 	}
 	
 	/**

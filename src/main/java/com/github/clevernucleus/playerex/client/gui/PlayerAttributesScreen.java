@@ -75,17 +75,17 @@ public class PlayerAttributesScreen extends ContainerScreen<PlayerAttributesCont
 	}
 	
 	@Override
-	protected void drawGuiContainerForegroundLayer(MatrixStack par0, int par1, int par2) {
+	protected void renderLabels(MatrixStack par0, int par1, int par2) {
 		this.activePage.drawGuiContainerForegroundLayer(par0, par1, par2);
 	}
 	
 	@Override
-	protected void drawGuiContainerBackgroundLayer(MatrixStack par0, float par1, int par2, int par3) {
-		int var0 = this.guiLeft;
-		int var1 = (this.height - this.ySize) / 2;
+	protected void renderBg(MatrixStack par0, float par1, int par2, int par3) {
+		int var0 = this.leftPos;
+		int var1 = (this.height - this.imageHeight) / 2;
 		
-		this.minecraft.getTextureManager().bindTexture(GUI);
-		this.blit(par0, var0, var1, 0, 0, this.xSize, this.ySize);
+		this.minecraft.getTextureManager().bind(GUI);
+		this.blit(par0, var0, var1, 0, 0, this.imageWidth, this.imageHeight);
 		this.activePage.drawGuiContainerBackgroundLayer(par0, par1, par2, par3);
 		this.buttons.forEach(var -> {
 			var.render(par0, par2, par3, par1);
@@ -99,7 +99,7 @@ public class PlayerAttributesScreen extends ContainerScreen<PlayerAttributesCont
 		this.addButton(new TexturedButton(this, ClientConfig.CLIENT.guiButtonX.get().intValue(), ClientConfig.CLIENT.guiButtonY.get().intValue(), 14, 13, 190, 0, -1, (var0, var1) -> {
 			Registry.NETWORK.sendToServer(new SwitchScreens(true));
 			InventoryScreen var2 = new InventoryScreen(Minecraft.getInstance().player);
-			Minecraft.getInstance().displayGuiScreen(var2);
+			Minecraft.getInstance().setScreen(var2);
 		}));
 		
 		if(this.pages.size() > 1) {

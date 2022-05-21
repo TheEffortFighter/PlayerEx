@@ -59,7 +59,7 @@ public class PageButton extends AbstractButton {
 	public void renderButton(MatrixStack par0, int par1, int par2, float par3) {
 		Minecraft var0 = Minecraft.getInstance();
 		
-		var0.getTextureManager().bindTexture(PlayerAttributesScreen.TAB);
+		var0.getTextureManager().bind(PlayerAttributesScreen.TAB);
 		
 		RenderSystem.disableDepthTest();
 		
@@ -69,6 +69,6 @@ public class PageButton extends AbstractButton {
 		
 		ItemRenderer var1 = var0.getItemRenderer();
 		
-		var1.renderItemAndEffectIntoGUI(this.parentScreen.getPage(this.additionalData).displayStack(), this.x + 6, this.y + (this.additionalData < 6 ? 8 : 6));
+		var1.renderAndDecorateItem(this.parentScreen.getPage(this.additionalData).displayStack(), this.x + 6, this.y + (this.additionalData < 6 ? 8 : 6));
 	}
 }

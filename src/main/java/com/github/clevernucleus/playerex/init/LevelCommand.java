@@ -20,12 +20,12 @@ public class LevelCommand {
 
 	/** Error procedure. */
 	private static boolean error(final CommandContext<CommandSource> par0, final PlayerEntity par1) {
-		if(par1.world.isRemote) return true;
+		if(par1.level.isClientSide) return true;
 		
 		PlayerList var0 = par0.getSource().getServer().getPlayerList();
 		
 		if(!var0.getPlayers().contains(par1)) {
-			par0.getSource().sendFeedback(new StringTextComponent(TextFormatting.RED + par1.getDisplayName().toString() + TextFormatting.GRAY + " does not exist!"), true);
+			par0.getSource().sendSuccess(new StringTextComponent(TextFormatting.RED + par1.getDisplayName().toString() + TextFormatting.GRAY + " does not exist!"), true);
 			
 			return true;
 		}
@@ -50,7 +50,7 @@ public class LevelCommand {
 	 * @param par0
 	 */
 	public static void register(CommandDispatcher<CommandSource> par0) {
-		par0.register(Commands.literal(ExAPI.MODID).requires(var -> var.hasPermissionLevel(2)).then(Commands.literal("level-add").then(Commands.argument("player", EntityArgument.player()).suggests((var0, var1) -> {
+		par0.register(Commands.literal(ExAPI.MODID).requires(var -> var.hasPermission(2)).then(Commands.literal("level-add").then(Commands.argument("player", EntityArgument.player()).suggests((var0, var1) -> {
 			PlayerList var2 = var0.getSource().getServer().getPlayerList();
 			
 			return ISuggestionProvider.suggest(var2.getPlayers().stream().map(var3 -> var3.getGameProfile().getName()), var1);

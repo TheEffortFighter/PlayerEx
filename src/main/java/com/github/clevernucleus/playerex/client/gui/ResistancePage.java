@@ -33,7 +33,7 @@ public class ResistancePage extends Page {
 	}, (par0, par1) -> {
 		List<ITextComponent> var0 = new ArrayList<ITextComponent>();
 		
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.format(ExAPI.MODID + ".attribute.knockback_resistance.alt") + text.format(100D * par1.get(par0, PlayerAttributes.KNOCKBACK_RESISTANCE)) + "%"));
+		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.knockback_resistance.alt") + text.format(100D * par1.get(par0, PlayerAttributes.KNOCKBACK_RESISTANCE)) + "%"));
 		
 		ClientReg.getTooltips(PlayerAttributes.KNOCKBACK_RESISTANCE.registryName()).forEach(var -> var0.add(new StringTextComponent(var.apply(par0, par1))));
 		
@@ -46,7 +46,7 @@ public class ResistancePage extends Page {
 	}, (par0, par1) -> {
 		List<ITextComponent> var0 = new ArrayList<ITextComponent>();
 		
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.format(ExAPI.MODID + ".attribute.damage_reduction.alt") + text.format(100D * par1.get(par0, PlayerAttributes.DAMAGE_REDUCTION)) + "%"));
+		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.damage_reduction.alt") + text.format(100D * par1.get(par0, PlayerAttributes.DAMAGE_REDUCTION)) + "%"));
 		
 		ClientReg.getTooltips(PlayerAttributes.DAMAGE_REDUCTION.registryName()).forEach(var -> var0.add(new StringTextComponent(var.apply(par0, par1))));
 		
@@ -59,7 +59,7 @@ public class ResistancePage extends Page {
 	}, (par0, par1) -> {
 		List<ITextComponent> var0 = new ArrayList<ITextComponent>();
 		
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.format(ExAPI.MODID + ".attribute.fire_resistance.alt") + text.format(100D * par1.get(par0, PlayerAttributes.FIRE_RESISTANCE)) + "%"));
+		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.fire_resistance.alt") + text.format(100D * par1.get(par0, PlayerAttributes.FIRE_RESISTANCE)) + "%"));
 		
 		ClientReg.getTooltips(PlayerAttributes.FIRE_RESISTANCE.registryName()).forEach(var -> var0.add(new StringTextComponent(var.apply(par0, par1))));
 		
@@ -72,7 +72,7 @@ public class ResistancePage extends Page {
 	}, (par0, par1) -> {
 		List<ITextComponent> var0 = new ArrayList<ITextComponent>();
 		
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.format(ExAPI.MODID + ".attribute.lava_resistance.alt") + text.format(100D * par1.get(par0, PlayerAttributes.LAVA_RESISTANCE)) + "%"));
+		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.lava_resistance.alt") + text.format(100D * par1.get(par0, PlayerAttributes.LAVA_RESISTANCE)) + "%"));
 		
 		ClientReg.getTooltips(PlayerAttributes.LAVA_RESISTANCE.registryName()).forEach(var -> var0.add(new StringTextComponent(var.apply(par0, par1))));
 		
@@ -85,7 +85,7 @@ public class ResistancePage extends Page {
 	}, (par0, par1) -> {
 		List<ITextComponent> var0 = new ArrayList<ITextComponent>();
 		
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.format(ExAPI.MODID + ".attribute.explosion_resistance.alt") + text.format(100D * par1.get(par0, PlayerAttributes.EXPLOSION_RESISTANCE)) + "%"));
+		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.explosion_resistance.alt") + text.format(100D * par1.get(par0, PlayerAttributes.EXPLOSION_RESISTANCE)) + "%"));
 		
 		ClientReg.getTooltips(PlayerAttributes.EXPLOSION_RESISTANCE.registryName()).forEach(var -> var0.add(new StringTextComponent(var.apply(par0, par1))));
 		
@@ -98,7 +98,7 @@ public class ResistancePage extends Page {
 	}, (par0, par1) -> {
 		List<ITextComponent> var0 = new ArrayList<ITextComponent>();
 		
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.format(ExAPI.MODID + ".attribute.poison_resistance.alt") + text.format(100D * par1.get(par0, PlayerAttributes.POISON_RESISTANCE)) + "%"));
+		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.poison_resistance.alt") + text.format(100D * par1.get(par0, PlayerAttributes.POISON_RESISTANCE)) + "%"));
 		
 		ClientReg.getTooltips(PlayerAttributes.POISON_RESISTANCE.registryName()).forEach(var -> var0.add(new StringTextComponent(var.apply(par0, par1))));
 		
@@ -111,7 +111,7 @@ public class ResistancePage extends Page {
 	}, (par0, par1) -> {
 		List<ITextComponent> var0 = new ArrayList<ITextComponent>();
 		
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.format(ExAPI.MODID + ".attribute.wither_resistance.alt") + text.format(100D * par1.get(par0, PlayerAttributes.WITHER_RESISTANCE)) + "%"));
+		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.wither_resistance.alt") + text.format(100D * par1.get(par0, PlayerAttributes.WITHER_RESISTANCE)) + "%"));
 		
 		ClientReg.getTooltips(PlayerAttributes.WITHER_RESISTANCE.registryName()).forEach(var -> var0.add(new StringTextComponent(var.apply(par0, par1))));
 		
@@ -124,7 +124,7 @@ public class ResistancePage extends Page {
 	}, (par0, par1) -> {
 		List<ITextComponent> var0 = new ArrayList<ITextComponent>();
 		
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.format(ExAPI.MODID + ".attribute.falling_resistance.alt") + text.format(100D * par1.get(par0, PlayerAttributes.FALLING_RESISTANCE)) + "%"));
+		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.falling_resistance.alt") + text.format(100D * par1.get(par0, PlayerAttributes.FALLING_RESISTANCE)) + "%"));
 		
 		ClientReg.getTooltips(PlayerAttributes.FALLING_RESISTANCE.registryName()).forEach(var -> var0.add(new StringTextComponent(var.apply(par0, par1))));
 		
@@ -137,7 +137,7 @@ public class ResistancePage extends Page {
 	}, (par0, par1) -> {
 		List<ITextComponent> var0 = new ArrayList<ITextComponent>();
 		
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.format(ExAPI.MODID + ".attribute.drowning_resistance.alt") + text.format(100D * par1.get(par0, PlayerAttributes.DROWNING_RESISTANCE)) + "%"));
+		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.drowning_resistance.alt") + text.format(100D * par1.get(par0, PlayerAttributes.DROWNING_RESISTANCE)) + "%"));
 		
 		ClientReg.getTooltips(PlayerAttributes.DROWNING_RESISTANCE.registryName()).forEach(var -> var0.add(new StringTextComponent(var.apply(par0, par1))));
 		
@@ -171,7 +171,7 @@ public class ResistancePage extends Page {
 	
 	@Override
 	public void drawGuiContainerForegroundLayer(MatrixStack par0, int par1, int par2) {
-		this.font.drawString(par0, this.title.getString(), 9F, 9F, 4210752);
+		this.font.draw(par0, this.title.getString(), 9F, 9F, 4210752);
 		this.dynamicTextComponents.forEach(var -> var.draw(par0, this.font, this.minecraft.player));
 	}
 }

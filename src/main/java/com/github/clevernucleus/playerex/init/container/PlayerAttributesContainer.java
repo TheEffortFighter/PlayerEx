@@ -14,7 +14,7 @@ public class PlayerAttributesContainer extends Container {
 	}
 	
 	@Override
-	public boolean canInteractWith(final PlayerEntity par0) {
+	public boolean stillValid(final PlayerEntity par0) {
 		return true;
 	}
 }

@@ -54,7 +54,7 @@ public class TexturedButton extends AbstractButton {
 	public void renderButton(MatrixStack par0, int par1, int par2, float par3) {
 		Minecraft var0 = Minecraft.getInstance();
 		
-		var0.getTextureManager().bindTexture(PlayerAttributesScreen.GUI);
+		var0.getTextureManager().bind(PlayerAttributesScreen.GUI);
 		
 		RenderSystem.disableDepthTest();
 		

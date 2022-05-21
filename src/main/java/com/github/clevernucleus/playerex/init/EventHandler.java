@@ -31,7 +31,7 @@ public class EventHandler {
 	 */
 	private static void init(final PlayerEntity par0) {
 		if(par0 == null) return;
-		if(par0.world.isRemote) return;
+		if(par0.level.isClientSide) return;
 		
 		ExAPI.playerAttributes(par0).ifPresent(var -> {
 			CompoundNBT var0 = var.write();
@@ -51,7 +51,7 @@ public class EventHandler {
 	/** Bit of a temporary thing; we'll rewrite this nicely when we rework the system for 1.17 (or pre-1.17)*/
 	public static void reset(final PlayerEntity par0, final boolean par1) {
 		if(par0 == null) return;
-		if(par0.world.isRemote) return;
+		if(par0.level.isClientSide) return;
 		
 		ExAPI.playerAttributes(par0).ifPresent(var -> {
 			if(par1) {
@@ -75,7 +75,7 @@ public class EventHandler {
 	 */
 	public static void update(PlayerEntity par0) {
 		if(par0 == null) return;
-		if(par0.world.isRemote) return;
+		if(par0.level.isClientSide) return;
 		
 		ExAPI.playerAttributes(par0).ifPresent(var -> ((AttributesCapability)var).update(par0));
 	}
@@ -86,15 +86,15 @@ public class EventHandler {
 	 */
 	public static void sync(PlayerEntity par0) {
 		if(par0 == null) return;
-		if(par0.world.isRemote) return;
+		if(par0.level.isClientSide) return;
 		
 		ExAPI.playerAttributes(par0).ifPresent(var -> ((AttributesCapability)var).send(par0));
 	}
 	
 	@SubscribeEvent
     public static void serverLoad(final FMLServerStartingEvent par0) {
-        ResetCommand.register(par0.getServer().getCommandManager().getDispatcher());
-        LevelCommand.register(par0.getServer().getCommandManager().getDispatcher());
+        ResetCommand.register(par0.getServer().getCommands().getDispatcher());
+        LevelCommand.register(par0.getServer().getCommands().getDispatcher());
     }
 	
 	/**
@@ -117,7 +117,7 @@ public class EventHandler {
 		PlayerEntity var0 = par0.getPlayer();
 		PlayerEntity var1 = par0.getOriginal();
 		
-		if(var0.world.isRemote) return;
+		if(var0.level.isClientSide) return;
 		if(par0.isWasDeath() && CommonConfig.COMMON.resetOnDeath.get()) {
 			reset(var0, false);
 			update(var0);
@@ -174,7 +174,7 @@ public class EventHandler {
 		update(var0);
 		sync(var0);
 		
-		if(var0.world.isRemote) return;
+		if(var0.level.isClientSide) return;
 		
 		ExAPI.playerAttributes(var0).ifPresent(var -> {
 			CompoundNBT var1 = var.write();
@@ -193,7 +193,7 @@ public class EventHandler {
 	public static void onPlayerLoggedOut(final net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedOutEvent par0) {
 		PlayerEntity var0 = par0.getPlayer();
 		
-		if(var0.world.isRemote) return;
+		if(var0.level.isClientSide) return;
 		
 		ExAPI.playerAttributes(var0).ifPresent(var -> {
 			CompoundNBT var1 = var.write();
@@ -223,7 +223,7 @@ public class EventHandler {
 	public static void onPlayerTick(final net.minecraftforge.event.TickEvent.PlayerTickEvent par0) {
 		PlayerEntity var0 = par0.player;
 		
-		if(var0.world.isRemote) return;
+		if(var0.level.isClientSide) return;
 		
 		ExAPI.playerAttributes(var0).ifPresent(var -> {
 			var0.heal((float)var.get(var0, PlayerAttributes.HEALTH_REGEN));
@@ -231,10 +231,10 @@ public class EventHandler {
 			AttributesCapability var1 = (AttributesCapability)var;
 			
 			for(EquipmentSlotType var2 : EquipmentSlotType.values()) {
-				ItemStack var3 = var0.getItemStackFromSlot(var2);
+				ItemStack var3 = var0.getItemBySlot(var2);
 				ItemStack var4 = var1.getEquipment(var2);
 				
-				if(!ItemStack.areItemStacksEqual(var3, var4)) {
+				if(!ItemStack.matches(var3, var4)) {
 					var1.putEquipment(var2, var3);
 					sync(var0);
 				}
@@ -250,7 +250,7 @@ public class EventHandler {
 	public static void onExperienceProcessed(final net.minecraftforge.event.entity.player.PlayerXpEvent.XpChange par0) {
 		PlayerEntity var0 = par0.getPlayer();
 		
-		if(var0.world.isRemote) return;
+		if(var0.level.isClientSide) return;
 		
 		int var1 = par0.getAmount();
 		int var2 = Math.round((float)var1 * CommonConfig.COMMON.experienceSplit.get().floatValue() / 100F);
@@ -279,7 +279,7 @@ public class EventHandler {
 		if(par0.getEntityLiving() instanceof PlayerEntity) {
 			PlayerEntity var0 = (PlayerEntity)par0.getEntityLiving();
 			
-			if(var0.world.isRemote) return;
+			if(var0.level.isClientSide) return;
 			
 			ExAPI.playerAttributes(var0).ifPresent(var -> {
 				par0.setAmount(par0.getAmount() * (1F + (float)var.get(var0, PlayerAttributes.HEALTH_REGEN_AMP)));
@@ -296,7 +296,7 @@ public class EventHandler {
 		PlayerEntity var0 = par0.getPlayer();
 		Random var1 = new Random();
 		
-		if(var0.world.isRemote) return;
+		if(var0.level.isClientSide) return;
 		
 		ExAPI.playerAttributes(var0).ifPresent(var -> {
 			par0.setDamageModifier(1F + (float)var.get(var0, PlayerAttributes.MELEE_CRIT_DAMAGE));
@@ -319,7 +319,7 @@ public class EventHandler {
 			PlayerEntity var0 = (PlayerEntity)par0.getEntityLiving();
 			Random var1 = new Random();
 			
-			if(var0.world.isRemote) return;
+			if(var0.level.isClientSide) return;
 			
 			ExAPI.playerAttributes(var0).ifPresent(var -> {
 				if(par0.getSource().equals(DamageSource.IN_FIRE) || par0.getSource().equals(DamageSource.ON_FIRE) || par0.getSource().equals(DamageSource.HOT_FLOOR)) {
@@ -334,7 +334,7 @@ public class EventHandler {
 					par0.setAmount(par0.getAmount() * (1F - (float)var.get(var0, PlayerAttributes.EXPLOSION_RESISTANCE)));
 				}
 				
-				if(par0.getSource().isMagicDamage()) {
+				if(par0.getSource().isMagic()) {
 					par0.setAmount(par0.getAmount() * (1F - (float)var.get(var0, PlayerAttributes.POISON_RESISTANCE)));
 				}
 				
@@ -350,7 +350,7 @@ public class EventHandler {
 					par0.setAmount(par0.getAmount() * (1F - (float)var.get(var0, PlayerAttributes.FALLING_RESISTANCE)));
 				}
 				
-				if(par0.getSource().isUnblockable()) {
+				if(par0.getSource().isBypassArmor()) {
 					par0.setAmount(par0.getAmount() * (1F - (float)var.get(var0, PlayerAttributes.DAMAGE_REDUCTION)));
 				}
 				
@@ -362,8 +362,8 @@ public class EventHandler {
 			});
 		}
 		
-		if(par0.getSource().getTrueSource() instanceof PlayerEntity) {
-			PlayerEntity var0 = (PlayerEntity)par0.getSource().getTrueSource();
+		if(par0.getSource().getEntity() instanceof PlayerEntity) {
+			PlayerEntity var0 = (PlayerEntity)par0.getSource().getEntity();
 			
 			ExAPI.playerAttributes(var0).ifPresent(var -> {
 				var0.heal(par0.getAmount() * (float)var.get(var0, PlayerAttributes.LIFESTEAL));
@@ -377,16 +377,16 @@ public class EventHandler {
 	 */
 	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public static void onProjectileImpact(final net.minecraftforge.event.entity.ProjectileImpactEvent.Arrow par0) {
-		if(par0.getArrow().func_234616_v_() instanceof PlayerEntity) {
-			PlayerEntity var0 = (PlayerEntity)par0.getArrow().func_234616_v_();
+		if(par0.getArrow().getOwner() instanceof PlayerEntity) {
+			PlayerEntity var0 = (PlayerEntity)par0.getArrow().getOwner();
 			Random var1 = new Random();
 			
 			ExAPI.playerAttributes(var0).ifPresent(var -> {
 				boolean var2 = var1.nextInt(100) > (int)(100F * var.get(var0, PlayerAttributes.RANGED_CRIT_CHANCE));
-				double var3 = par0.getArrow().getDamage() + var.get(var0, PlayerAttributes.RANGED_DAMAGE);
+				double var3 = par0.getArrow().getBaseDamage() + var.get(var0, PlayerAttributes.RANGED_DAMAGE);
 				
-				par0.getArrow().setIsCritical(var2);
-				par0.getArrow().setDamage(var2 ? (var3 * (1D + var.get(var0, PlayerAttributes.RANGED_CRIT_DAMAGE))) : var3);
+				par0.getArrow().setCritArrow(var2);
+				par0.getArrow().setBaseDamage(var2 ? (var3 * (1D + var.get(var0, PlayerAttributes.RANGED_CRIT_DAMAGE))) : var3);
 			});
 		}
 	}

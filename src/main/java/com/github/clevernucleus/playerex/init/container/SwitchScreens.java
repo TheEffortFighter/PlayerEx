@@ -52,11 +52,11 @@ public class SwitchScreens {
 				ServerPlayerEntity var0 = par1.get().getSender();
 				
 				if(var0 != null) {
-					var0.openContainer.onContainerClosed(var0);
-					var0.openContainer = var0.container;
+					var0.containerMenu.removed(var0);
+					var0.containerMenu = var0.inventoryMenu;
 				}
 			} else {
-				par1.get().getSender().closeContainer();
+				par1.get().getSender().doCloseContainer();
 				NetworkHooks.openGui(par1.get().getSender(), new PlayerAttributesContainerProvider());
 			}
 		});

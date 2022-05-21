@@ -8,6 +8,8 @@ import com.github.clevernucleus.playerex.api.Limit;
 import net.minecraft.entity.ai.attributes.Attribute;
 import net.minecraft.util.ResourceLocation;
 
+import com.github.clevernucleus.playerex.api.attribute.IPlayerAttribute.Type;
+
 public class PlayerAttribute implements IPlayerAttribute {
 	private IPlayerAttribute.Type type;
 	private Supplier<Attribute> attribute;

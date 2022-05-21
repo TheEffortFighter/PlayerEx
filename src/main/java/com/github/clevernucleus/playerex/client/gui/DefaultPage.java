@@ -40,7 +40,7 @@ public class DefaultPage extends Page {
 	}, (par0, par1) -> {
 		List<ITextComponent> var0 = new ArrayList<ITextComponent>();
 		
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.format(ExAPI.MODID + ".attribute.level.alt")));
+		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.level.alt")));
 		
 		ClientReg.getTooltips(PlayerAttributes.LEVEL.registryName()).forEach(var -> var0.add(new StringTextComponent(var.apply(par0, par1))));
 		
@@ -54,7 +54,7 @@ public class DefaultPage extends Page {
 	}, (par0, par1) -> {
 		List<ITextComponent> var0 = new ArrayList<ITextComponent>();
 		
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.format(ExAPI.MODID + ".attribute.skillpoints.alt")));
+		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.skillpoints.alt")));
 		
 		ClientReg.getTooltips(PlayerAttributes.SKILLPOINTS.registryName()).forEach(var -> var0.add(new StringTextComponent(var.apply(par0, par1))));
 		
@@ -67,8 +67,8 @@ public class DefaultPage extends Page {
 	}, (par0, par1) -> {
 		List<ITextComponent> var0 = new ArrayList<ITextComponent>();
 		
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.format(ExAPI.MODID + ".attribute.constitution.alt0")));
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.format(ExAPI.MODID + ".attribute.constitution.alt1")));
+		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.constitution.alt0")));
+		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.constitution.alt1")));
 		
 		ClientReg.getTooltips(PlayerAttributes.CONSTITUTION.registryName()).forEach(var -> var0.add(new StringTextComponent(var.apply(par0, par1))));
 		
@@ -81,9 +81,9 @@ public class DefaultPage extends Page {
 	}, (par0, par1) -> {
 		List<ITextComponent> var0 = new ArrayList<ITextComponent>();
 		
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.format(ExAPI.MODID + ".attribute.strength.alt0")));
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.format(ExAPI.MODID + ".attribute.strength.alt1")));
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.format(ExAPI.MODID + ".attribute.strength.alt2")));
+		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.strength.alt0")));
+		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.strength.alt1")));
+		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.strength.alt2")));
 		
 		ClientReg.getTooltips(PlayerAttributes.STRENGTH.registryName()).forEach(var -> var0.add(new StringTextComponent(var.apply(par0, par1))));
 		
@@ -96,10 +96,10 @@ public class DefaultPage extends Page {
 	}, (par0, par1) -> {
 		List<ITextComponent> var0 = new ArrayList<ITextComponent>();
 		
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.format(ExAPI.MODID + ".attribute.dexterity.alt0")));
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.format(ExAPI.MODID + ".attribute.dexterity.alt1")));
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.format(ExAPI.MODID + ".attribute.dexterity.alt2")));
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.format(ExAPI.MODID + ".attribute.dexterity.alt3")));
+		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.dexterity.alt0")));
+		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.dexterity.alt1")));
+		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.dexterity.alt2")));
+		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.dexterity.alt3")));
 		
 		ClientReg.getTooltips(PlayerAttributes.DEXTERITY.registryName()).forEach(var -> var0.add(new StringTextComponent(var.apply(par0, par1))));
 		
@@ -112,9 +112,9 @@ public class DefaultPage extends Page {
 	}, (par0, par1) -> {
 		List<ITextComponent> var0 = new ArrayList<ITextComponent>();
 		
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.format(ExAPI.MODID + ".attribute.intelligence.alt0")));
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.format(ExAPI.MODID + ".attribute.intelligence.alt1")));
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.format(ExAPI.MODID + ".attribute.intelligence.alt2")));
+		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.intelligence.alt0")));
+		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.intelligence.alt1")));
+		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.intelligence.alt2")));
 		
 		ClientReg.getTooltips(PlayerAttributes.INTELLIGENCE.registryName()).forEach(var -> var0.add(new StringTextComponent(var.apply(par0, par1))));
 		
@@ -127,10 +127,10 @@ public class DefaultPage extends Page {
 	}, (par0, par1) -> {
 		List<ITextComponent> var0 = new ArrayList<ITextComponent>();
 		
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.format(ExAPI.MODID + ".attribute.luckiness.alt0")));
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.format(ExAPI.MODID + ".attribute.luckiness.alt1")));
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.format(ExAPI.MODID + ".attribute.luckiness.alt2")));
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.format(ExAPI.MODID + ".attribute.luckiness.alt3")));
+		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.luckiness.alt0")));
+		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.luckiness.alt1")));
+		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.luckiness.alt2")));
+		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.luckiness.alt3")));
 		
 		ClientReg.getTooltips(PlayerAttributes.LUCKINESS.registryName()).forEach(var -> var0.add(new StringTextComponent(var.apply(par0, par1))));
 		
@@ -143,10 +143,10 @@ public class DefaultPage extends Page {
 	}, (par0, par1) -> {
 		List<ITextComponent> var0 = new ArrayList<ITextComponent>();
 		
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.format(ExAPI.MODID + ".attribute.health.alt0")));
+		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.health.alt0")));
 		var0.add(new StringTextComponent(" "));
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.format(ExAPI.MODID + ".attribute.health.alt1") + text.format(((400D / 9D) * par1.get(par0, PlayerAttributes.HEALTH_REGEN))) + "/s"));
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.format(ExAPI.MODID + ".attribute.health.alt2") + text.format(100D * par1.get(par0, PlayerAttributes.HEALTH_REGEN_AMP)) + "%"));
+		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.health.alt1") + text.format(((400D / 9D) * par1.get(par0, PlayerAttributes.HEALTH_REGEN))) + "/s"));
+		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.health.alt2") + text.format(100D * par1.get(par0, PlayerAttributes.HEALTH_REGEN_AMP)) + "%"));
 		
 		ClientReg.getTooltips(PlayerAttributes.MAX_HEALTH.registryName()).forEach(var -> var0.add(new StringTextComponent(var.apply(par0, par1))));
 		
@@ -161,9 +161,9 @@ public class DefaultPage extends Page {
 		List<ITextComponent> var0 = new ArrayList<ITextComponent>();
 		String var1 = text.format(par1.get(par0, PlayerAttributes.ARMOR_TOUGHNESS));
 		
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.format(ExAPI.MODID + ".attribute.armor.alt0")));
+		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.armor.alt0")));
 		var0.add(new StringTextComponent(" "));
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.format(ExAPI.MODID + ".attribute.armor.alt1") + var1));
+		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.armor.alt1") + var1));
 		
 		ClientReg.getTooltips(PlayerAttributes.ARMOR.registryName()).forEach(var -> var0.add(new StringTextComponent(var.apply(par0, par1))));
 		
@@ -177,7 +177,7 @@ public class DefaultPage extends Page {
 	}, (par0, par1) -> {
 		List<ITextComponent> var0 = new ArrayList<ITextComponent>();
 		
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.format(ExAPI.MODID + ".attribute.attack_speed.alt")));
+		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.attack_speed.alt")));
 		
 		ClientReg.getTooltips(PlayerAttributes.ATTACK_SPEED.registryName()).forEach(var -> var0.add(new StringTextComponent(var.apply(par0, par1))));
 		
@@ -190,8 +190,8 @@ public class DefaultPage extends Page {
 	}, (par0, par1) -> {
 		List<ITextComponent> var0 = new ArrayList<ITextComponent>();
 		
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.format(ExAPI.MODID + ".attribute.melee.alt0") + text.format(100D + (100D * par1.get(par0, PlayerAttributes.MELEE_CRIT_DAMAGE))) + "%"));
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.format(ExAPI.MODID + ".attribute.melee.alt1") + text.format(100D * par1.get(par0, PlayerAttributes.MELEE_CRIT_CHANCE)) + "%"));
+		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.melee.alt0") + text.format(100D + (100D * par1.get(par0, PlayerAttributes.MELEE_CRIT_DAMAGE))) + "%"));
+		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.melee.alt1") + text.format(100D * par1.get(par0, PlayerAttributes.MELEE_CRIT_CHANCE)) + "%"));
 		
 		ClientReg.getTooltips(PlayerAttributes.MELEE_DAMAGE.registryName()).forEach(var -> var0.add(new StringTextComponent(var.apply(par0, par1))));
 		
@@ -204,8 +204,8 @@ public class DefaultPage extends Page {
 	}, (par0, par1) -> {
 		List<ITextComponent> var0 = new ArrayList<ITextComponent>();
 		
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.format(ExAPI.MODID + ".attribute.ranged.alt0") + text.format(100D + (100D * par1.get(par0, PlayerAttributes.RANGED_CRIT_DAMAGE))) + "%"));
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.format(ExAPI.MODID + ".attribute.ranged.alt1") + text.format(100D * par1.get(par0, PlayerAttributes.RANGED_CRIT_CHANCE)) + "%"));
+		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.ranged.alt0") + text.format(100D + (100D * par1.get(par0, PlayerAttributes.RANGED_CRIT_DAMAGE))) + "%"));
+		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.ranged.alt1") + text.format(100D * par1.get(par0, PlayerAttributes.RANGED_CRIT_CHANCE)) + "%"));
 		
 		ClientReg.getTooltips(PlayerAttributes.RANGED_DAMAGE.registryName()).forEach(var -> var0.add(new StringTextComponent(var.apply(par0, par1))));
 		
@@ -218,7 +218,7 @@ public class DefaultPage extends Page {
 	}, (par0, par1) -> {
 		List<ITextComponent> var0 = new ArrayList<ITextComponent>();
 		
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.format(ExAPI.MODID + ".attribute.evasion.alt")));
+		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.evasion.alt")));
 		
 		ClientReg.getTooltips(PlayerAttributes.EVASION.registryName()).forEach(var -> var0.add(new StringTextComponent(var.apply(par0, par1))));
 		
@@ -231,7 +231,7 @@ public class DefaultPage extends Page {
 	}, (par0, par1) -> {
 		List<ITextComponent> var0 = new ArrayList<ITextComponent>();
 		
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.format(ExAPI.MODID + ".attribute.lifesteal.alt")));
+		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.lifesteal.alt")));
 		
 		ClientReg.getTooltips(PlayerAttributes.LIFESTEAL.registryName()).forEach(var -> var0.add(new StringTextComponent(var.apply(par0, par1))));
 		
@@ -244,7 +244,7 @@ public class DefaultPage extends Page {
 	}, (par0, par1) -> {
 		List<ITextComponent> var0 = new ArrayList<ITextComponent>();
 		
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.format(ExAPI.MODID + ".attribute.luck.alt")));
+		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.luck.alt")));
 		
 		ClientReg.getTooltips(PlayerAttributes.LUCK.registryName()).forEach(var -> var0.add(new StringTextComponent(var.apply(par0, par1))));
 		
@@ -257,7 +257,7 @@ public class DefaultPage extends Page {
 	}, (par0, par1) -> {
 		List<ITextComponent> var0 = new ArrayList<ITextComponent>();
 		
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.format(ExAPI.MODID + ".attribute.gravity.alt")));
+		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.gravity.alt")));
 		
 		ClientReg.getTooltips(PlayerAttributes.GRAVITY.registryName()).forEach(var -> var0.add(new StringTextComponent(var.apply(par0, par1))));
 		
@@ -270,7 +270,7 @@ public class DefaultPage extends Page {
 	}, (par0, par1) -> {
 		List<ITextComponent> var0 = new ArrayList<ITextComponent>();
 		
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.format(ExAPI.MODID + ".attribute.reach_distance.alt")));
+		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.reach_distance.alt")));
 		
 		ClientReg.getTooltips(PlayerAttributes.REACH_DISTANCE.registryName()).forEach(var -> var0.add(new StringTextComponent(var.apply(par0, par1))));
 		
@@ -283,7 +283,7 @@ public class DefaultPage extends Page {
 	}, (par0, par1) -> {
 		List<ITextComponent> var0 = new ArrayList<ITextComponent>();
 		
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.format(ExAPI.MODID + ".attribute.movement_speed.alt")));
+		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.movement_speed.alt")));
 		
 		ClientReg.getTooltips(PlayerAttributes.MOVEMENT_SPEED.registryName()).forEach(var -> var0.add(new StringTextComponent(var.apply(par0, par1))));
 		
@@ -296,7 +296,7 @@ public class DefaultPage extends Page {
 	}, (par0, par1) -> {
 		List<ITextComponent> var0 = new ArrayList<ITextComponent>();
 		
-		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.format(ExAPI.MODID + ".attribute.swim_speed.alt")));
+		var0.add(new StringTextComponent(TextFormatting.GRAY + I18n.get(ExAPI.MODID + ".attribute.swim_speed.alt")));
 		
 		ClientReg.getTooltips(PlayerAttributes.SWIM_SPEED.registryName()).forEach(var -> var0.add(new StringTextComponent(var.apply(par0, par1))));
 		
@@ -341,7 +341,7 @@ public class DefaultPage extends Page {
 	
 	@Override
 	public void drawGuiContainerForegroundLayer(MatrixStack par0, int par1, int par2) {
-		this.font.drawString(par0, this.title.getString(), 9F, 9F, 4210752);
+		this.font.draw(par0, this.title.getString(), 9F, 9F, 4210752);
 		this.dynamicTextComponents.forEach(var -> var.draw(par0, this.font, this.minecraft.player));
 	}
 	

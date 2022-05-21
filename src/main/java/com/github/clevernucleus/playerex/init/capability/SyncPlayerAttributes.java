@@ -37,7 +37,7 @@ public class SyncPlayerAttributes {
 	 * @param par1 Input buffer
 	 */
 	public static void encode(SyncPlayerAttributes par0, PacketBuffer par1) {
-		par1.writeCompoundTag(par0.tag);
+		par1.writeNbt(par0.tag);
 		par1.writeDouble(par0.offset);
 		par1.writeDouble(par0.scale);
 	}
@@ -48,7 +48,7 @@ public class SyncPlayerAttributes {
 	 * @return A new Packet instance.
 	 */
 	public static SyncPlayerAttributes decode(PacketBuffer par0) {
-		return new SyncPlayerAttributes(par0.readCompoundTag(), par0.readDouble(), par0.readDouble());
+		return new SyncPlayerAttributes(par0.readNbt(), par0.readDouble(), par0.readDouble());
 	}
 	
 	/**

@@ -36,7 +36,7 @@ public class DynamicTextComponent {
 			GL11.glPushMatrix();
 			GL11.glScalef(this.scale, this.scale, this.scale);
 			
-			par1.drawString(par0, this.titleText.apply(par2, var), this.posX, this.posY, 4210752);
+			par1.draw(par0, this.titleText.apply(par2, var), this.posX, this.posY, 4210752);
 			
 			GL11.glPopMatrix();
 		});
@@ -47,7 +47,7 @@ public class DynamicTextComponent {
 		int var1 = (int)((float)(par4 - 166) / 2.0F);
 		
 		ExAPI.playerAttributes(par2).ifPresent(var -> {
-			if(isHovered(par5, par6, var0 + (int)(this.posX * this.scale), var1 + (int)(this.posY * this.scale), (int)(par1.getStringWidth(this.titleText.apply(par2, var)) * this.scale), 7)) {
+			if(isHovered(par5, par6, var0 + (int)(this.posX * this.scale), var1 + (int)(this.posY * this.scale), (int)(par1.width(this.titleText.apply(par2, var)) * this.scale), 7)) {
 				GuiUtils.drawHoveringText(par0, this.hoverText.apply(par2, var), par5, par6, par3, par4, -1, par1);
 			}
 		});

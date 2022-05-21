@@ -59,7 +59,7 @@ public class Util {
 			var0 = dim(var1, par3.getAmount() * par4, par5) - var1;
 		}
 		
-		AttributeModifier var1 = new AttributeModifier(par3.getID(), par3.getName(), var0, par3.getOperation());
+		AttributeModifier var1 = new AttributeModifier(par3.getId(), par3.getName(), var0, par3.getOperation());
 		
 		par0.apply(par1, par2, var1);
 	}
@@ -73,7 +73,7 @@ public class Util {
 	 * @param par4 AttributeModifier value multiplier.
 	 */
 	public static void apply(TriFunction<PlayerEntity, IPlayerAttribute, AttributeModifier, IPlayerAttributes> par0, PlayerEntity par1, IPlayerAttribute par2, AttributeModifier par3, double par4) {
-		AttributeModifier var0 = new AttributeModifier(par3.getID(), par3.getName(), par3.getAmount() * par4, par3.getOperation());
+		AttributeModifier var0 = new AttributeModifier(par3.getId(), par3.getName(), par3.getAmount() * par4, par3.getOperation());
 		
 		par0.apply(par1, par2, var0);
 	}

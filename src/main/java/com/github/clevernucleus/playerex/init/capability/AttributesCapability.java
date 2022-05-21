@@ -39,7 +39,7 @@ public class AttributesCapability implements IPlayerAttributes {
 	private double offset, scale;
 	
 	public AttributesCapability() {
-		MutableAttribute var0 = AttributeModifierMap.createMutableAttribute();
+		MutableAttribute var0 = AttributeModifierMap.builder();
 		ListNBT var1 = new ListNBT();
 		CompoundNBT var2 = new CompoundNBT();
 		
@@ -51,13 +51,13 @@ public class AttributesCapability implements IPlayerAttributes {
 			putAttribute(var, 0D);
 			
 			if(var.type() == IPlayerAttribute.Type.ALL || var.type() == IPlayerAttribute.Type.DATA) {
-				var0 = var0.createMutableAttribute(var.get());
+				var0 = var0.add(var.get());
 			}
 		}
 		
 		this.offset = 0D;
 		this.scale = 0D;
-		this.attributeModifierManager = new AttributeModifierManager(var0.create());
+		this.attributeModifierManager = new AttributeModifierManager(var0.build());
 		this.clientStore = new HashMap<>();
 		this.equipmentStore = new HashMap<>();
 		this.equipmentStore.put(EquipmentSlotType.HEAD, ItemStack.EMPTY);
@@ -74,7 +74,7 @@ public class AttributesCapability implements IPlayerAttributes {
 	 */
 	private AttributeModifierManager getAttributeModifier(PlayerEntity par0, IPlayerAttribute par1) {
 		if(par1.type() == IPlayerAttribute.Type.GAME) {
-			return par0.getAttributeManager();
+			return par0.getAttributes();
 		} else if(par1.type() == IPlayerAttribute.Type.ALL || par1.type() == IPlayerAttribute.Type.DATA) {
 			return this.attributeModifierManager;
 		}
@@ -161,13 +161,13 @@ public class AttributesCapability implements IPlayerAttributes {
 		
 		for(INBT var : var1) {
 			CompoundNBT var2 = (CompoundNBT)var;
-			UUID var3 = var2.getUniqueId("UUID");
-			UUID var4 = par1.getID();
+			UUID var3 = var2.getUUID("UUID");
+			UUID var4 = par1.getId();
 			
 			if(var3.equals(var4)) return;
 		}
 		
-		var1.add(par1.write());
+		var1.add(par1.save());
 		var0.put(par0.toString(), var1);
 	}
 	
@@ -186,8 +186,8 @@ public class AttributesCapability implements IPlayerAttributes {
 		
 		for(int var = 0; var < var1.size(); var++) {
 			CompoundNBT var2 = var1.getCompound(var);
-			UUID var3 = var2.getUniqueId("UUID");
-			UUID var4 = par1.getID();
+			UUID var3 = var2.getUUID("UUID");
+			UUID var4 = par1.getId();
 			
 			if(var3.equals(var4)) {
 				var1.remove(var);
@@ -207,7 +207,7 @@ public class AttributesCapability implements IPlayerAttributes {
 		
 		if(var0.isEmpty()) return;
 		
-		for(String var : var0.keySet()) {
+		for(String var : var0.getAllKeys()) {
 			ListNBT var2 = var0.getList(var, 10);
 			IPlayerAttribute var3 = PlayerAttributes.fromRegistryName(var);
 			
@@ -215,7 +215,7 @@ public class AttributesCapability implements IPlayerAttributes {
 			
 			for(INBT var4 : var2) {
 				CompoundNBT var5 = (CompoundNBT)var4;
-				AttributeModifier var6 = AttributeModifier.read(var5);
+				AttributeModifier var6 = AttributeModifier.load(var5);
 				
 				var1.put(var3, var6);
 			}
@@ -232,8 +232,8 @@ public class AttributesCapability implements IPlayerAttributes {
 			}
 		});
 		
-		par0.getAttributeManager().reapplyModifiers(var2);
-		this.attributeModifierManager.reapplyModifiers(var3);
+		par0.getAttributes().addTransientAttributeModifiers(var2);
+		this.attributeModifierManager.addTransientAttributeModifiers(var3);
 	}
 	
 	@Override
@@ -243,9 +243,9 @@ public class AttributesCapability implements IPlayerAttributes {
 	
 	@Override
 	public double get(PlayerEntity par0, IPlayerAttribute par1) {
-		if(par0.world.isRemote) return this.clientStore.getOrDefault(par1, 0F);
+		if(par0.level.isClientSide) return this.clientStore.getOrDefault(par1, 0F);
 		
-		return getAttributeModifier(par0, par1).getAttributeValue(par1.get());
+		return getAttributeModifier(par0, par1).getValue(par1.get());
 	}
 	
 	@Override
@@ -257,7 +257,7 @@ public class AttributesCapability implements IPlayerAttributes {
 		
 		var1.put(par1.get(), var2);
 		
-		getAttributeModifier(par0, par1).reapplyModifiers(var1);
+		getAttributeModifier(par0, par1).addTransientAttributeModifiers(var1);
 		putAttribute(par1, var0);
 		
 		PlayerAttributes.adders().get(par1.registryName()).forEach(var -> var.accept(par0, this, par2));
@@ -272,7 +272,7 @@ public class AttributesCapability implements IPlayerAttributes {
 		
 		var0.put(par1.get(), var1);
 		
-		getAttributeModifier(par0, par1).reapplyModifiers(var0);
+		getAttributeModifier(par0, par1).addTransientAttributeModifiers(var0);
 		putAttribute(par1, 0D);
 		
 		send(par0);
@@ -287,7 +287,7 @@ public class AttributesCapability implements IPlayerAttributes {
 		var0.put(par1.get(), par2);
 		
 		putModifier(par1, par2);
-		getAttributeModifier(par0, par1).reapplyModifiers(var0);
+		getAttributeModifier(par0, par1).addTransientAttributeModifiers(var0);
 		
 		PlayerAttributes.modifiers().get(par1.registryName()).forEach(var -> var.accept(par0, this::applyModifier, par2));
 		
@@ -305,7 +305,7 @@ public class AttributesCapability implements IPlayerAttributes {
 		var0.put(par1.get(), par2);
 		
 		removeModifier(par1, par2);
-		getAttributeModifier(par0, par1).removeModifiers(var0);
+		getAttributeModifier(par0, par1).removeAttributeModifiers(var0);
 		
 		PlayerAttributes.modifiers().get(par1.registryName()).forEach(var -> var.accept(par0, this::removeModifier, par2));
 		
@@ -337,7 +337,7 @@ public class AttributesCapability implements IPlayerAttributes {
 			
 			var1.put(par1.get(), var2);
 			
-			getAttributeModifier(par0, par1).reapplyModifiers(var1);
+			getAttributeModifier(par0, par1).addTransientAttributeModifiers(var1);
 		}
 		
 		refreshModifierMap(par0);
@@ -375,7 +375,7 @@ public class AttributesCapability implements IPlayerAttributes {
 	 */
 	public void send(PlayerEntity par0) {
 		if(par0 == null) return;
-		if(par0.world.isRemote) return;
+		if(par0.level.isClientSide) return;
 		
 		CompoundNBT var0 = new CompoundNBT();
 		ListNBT var1 = new ListNBT();
@@ -390,7 +390,7 @@ public class AttributesCapability implements IPlayerAttributes {
 		
 		var0.put("Data", var1);
 		
-		Registry.NETWORK.sendTo(new SyncPlayerAttributes(var0, this.offset, this.scale), ((ServerPlayerEntity)par0).connection.getNetworkManager(), NetworkDirection.PLAY_TO_CLIENT);
+		Registry.NETWORK.sendTo(new SyncPlayerAttributes(var0, this.offset, this.scale), ((ServerPlayerEntity)par0).connection.getConnection(), NetworkDirection.PLAY_TO_CLIENT);
 	}
 	
 	/**

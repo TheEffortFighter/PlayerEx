@@ -22,7 +22,7 @@ public class ClientRegistry {
 	public static final KeyBinding HUD = new KeyBinding("key." + ExAPI.MODID + ".hud", KeyConflictContext.IN_GAME, key(GLFW.GLFW_KEY_LEFT_ALT), "PlayerEx");
 	
 	private static InputMappings.Input key(int par0) {
-		return InputMappings.Type.KEYSYM.getOrMakeInput(par0);
+		return InputMappings.Type.KEYSYM.getOrCreate(par0);
 	}
 	
 	/**
@@ -31,7 +31,7 @@ public class ClientRegistry {
 	 */
 	@SubscribeEvent
 	public static void clientSetup(final net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent par0) {
-		ScreenManager.registerFactory(Registry.ATTRIBUTES_CONTAINER, PlayerAttributesScreen::new);
+		ScreenManager.register(Registry.ATTRIBUTES_CONTAINER, PlayerAttributesScreen::new);
 		net.minecraftforge.fml.client.registry.ClientRegistry.registerKeyBinding(HUD);
 		
 		par0.enqueueWork(() -> {
