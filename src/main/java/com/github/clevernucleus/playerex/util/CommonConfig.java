@@ -33,6 +33,7 @@ public class CommonConfig {
 		public final IntValue constitution, strength, dexterity, intelligence, luckiness;
 		/** expCoeff parameters. */
 		public final DoubleValue offset, scale, experienceSplit;
+		public final BooleanValue xpGetsSplit;
 		/** reset attributes on death */
 		public final BooleanValue resetOnDeath;
 		
@@ -100,7 +101,8 @@ public class CommonConfig {
 			par0.push("experienceSplit");
 			
 			this.experienceSplit = par0.comment("The percentage of experience that contributes to PlayerEx levels.").translation(ExAPI.MODID + ".config.common.experiencesplit").defineInRange("experienceSplit", 50D, 1D, 99D);
-			
+			this.xpGetsSplit = par0.comment("When true, vanilla xp gain will be reduced by the percentage that contributes to PlayerEx levels. When false, you gain the normal amount of vanilla xp regardless and experienceSplit just determines how fast you gain PlayerEx levels.").translation(ExAPI.MODID + ".config.common.xpGetsSplit").define("xpGetsSplit", true);
+
 			par0.pop();
 			par0.push("expcoeff");
 			

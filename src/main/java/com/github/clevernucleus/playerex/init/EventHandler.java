@@ -2,6 +2,7 @@ package com.github.clevernucleus.playerex.init;
 
 import com.github.clevernucleus.playerex.api.ExAPI;
 import com.github.clevernucleus.playerex.api.attribute.IPlayerAttribute;
+import com.github.clevernucleus.playerex.api.attribute.IPlayerAttributes;
 import com.github.clevernucleus.playerex.api.attribute.PlayerAttributes;
 import com.github.clevernucleus.playerex.init.capability.AttributesCapability;
 import com.github.clevernucleus.playerex.init.capability.CapabilityProvider;
@@ -14,6 +15,8 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.Event.Result;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -105,40 +108,49 @@ public class EventHandler {
     public static void onCapabilityAttachEntity(final net.minecraftforge.event.AttachCapabilitiesEvent<Entity> par0) {
 		if(par0.getObject() instanceof Player) {
 			par0.addCapability(new ResourceLocation(ExAPI.MODID, "playerattributes"), new CapabilityProvider());
+			System.out.println("attach to " + par0.getObject().getStringUUID() + " " + par0.getObject().level.isClientSide());
 		}
 	}
-	
-	/**
-	 * Event firing when the player gets cloned.
-	 * @param par0
-	 */
+
+	// for some reason the capability doesnt seem to be present on the PlayerEvent.Clone, im sure im just being dumb somehow but maybe its about isAlive==false
+	private static LazyOptional<IPlayerAttributes> lastDiedPlayerAttributes = null;
+
+	@SubscribeEvent
+	public static void onPlayerEntityCloned(LivingDeathEvent event) {
+		if (event.getEntityLiving() instanceof Player && !event.getEntityLiving().level.isClientSide()){
+			lastDiedPlayerAttributes = ExAPI.playerAttributes((Player) event.getEntityLiving());
+		}
+	}
+
 	@SubscribeEvent
     public static void onPlayerEntityCloned(final net.minecraftforge.event.entity.player.PlayerEvent.Clone par0) {
-		Player var0 = par0.getPlayer();
-		Player var1 = par0.getOriginal();
-		
-		if(var0.level.isClientSide) return;
+		Player newPlayer = par0.getPlayer();
+		Player oldPlayer = par0.getOriginal();
+
+		LazyOptional<IPlayerAttributes> oldAttributes = ExAPI.playerAttributes(oldPlayer).isPresent() ? ExAPI.playerAttributes(oldPlayer) : lastDiedPlayerAttributes;
+
+		if(newPlayer.level.isClientSide) return;
 		if(par0.isWasDeath() && CommonConfig.COMMON.resetOnDeath.get()) {
-			reset(var0, false);
-			update(var0);
-			sync(var0);
-			
+			reset(newPlayer, false);
+			update(newPlayer);
+			sync(newPlayer);
+
 			return;
 		}
 		
 		try {
-			ExAPI.playerAttributes(var0).ifPresent(par1 -> {
-				ExAPI.playerAttributes(var1).ifPresent(par2 -> {
+			ExAPI.playerAttributes(newPlayer).ifPresent(par1 -> {
+				oldAttributes.ifPresent(par2 -> {
 					par1.read(par2.write());
 				});
 			});
 		} catch(Exception parE) {}
-		
-		update(var0);
-		sync(var0);
-		
+
+		update(newPlayer);
+		sync(newPlayer);
+
 		if(par0.isWasDeath()) {
-			var0.heal(var0.getMaxHealth());
+			newPlayer.heal(newPlayer.getMaxHealth());
 		}
 	}
 	
@@ -254,7 +266,7 @@ public class EventHandler {
 		
 		int var1 = par0.getAmount();
 		int var2 = Math.round((float)var1 * CommonConfig.COMMON.experienceSplit.get().floatValue() / 100F);
-		int var3 = Math.round((float)var1 * (100F - CommonConfig.COMMON.experienceSplit.get().floatValue()) / 100F);
+		int var3 = CommonConfig.COMMON.xpGetsSplit.get() ? Math.round((float)var1 * (100F - CommonConfig.COMMON.experienceSplit.get().floatValue()) / 100F) : par0.getAmount();
 		
 		ExAPI.playerAttributes(var0).ifPresent(var -> {
 			var.add(var0, PlayerAttributes.EXPERIENCE, var2);
