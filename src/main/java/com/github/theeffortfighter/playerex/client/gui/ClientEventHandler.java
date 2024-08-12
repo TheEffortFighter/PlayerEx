@@ -428,11 +428,7 @@ public class ClientEventHandler {
 			}
 		}
 
-		if(ClientConfig.CLIENT.enableUtilsBar.get()) {
-			drawUtilsBar(var1, Minecraft.getInstance(), true);
-			drawLevelBar(var1, Minecraft.getInstance(), true);
-
-		}
+		RenderSystem.setShaderTexture(0, GuiComponent.GUI_ICONS_LOCATION);
 	}
 	
 	/**
@@ -448,6 +444,14 @@ public class ClientEventHandler {
 		
 		// if(par0.getType() == ElementType.HOTBAR) return;
 		if(var1.isCreative() || var1.isSpectator()) return;
+
+		if(!isRidingJumpable(var1) && ClientConfig.CLIENT.enableUtilsBar.get()) {//!var1.isRidingHorse()
+			if(!isRiding(var1)) {
+				drawUtilsBar(var0, Minecraft.getInstance(), false);
+			}
+
+			drawLevelBar(var0, Minecraft.getInstance(), false);
+		}
 		
 		if(ClientConfig.CLIENT.enableHealthBar.get()) {
 			drawHealthBar(var0, Minecraft.getInstance(), false);
@@ -457,11 +461,5 @@ public class ClientEventHandler {
 			}
 		}
 
-		if(ClientConfig.CLIENT.enableUtilsBar.get()) {
-			drawUtilsBar(var0, Minecraft.getInstance(), false);
-			drawLevelBar(var0, Minecraft.getInstance(), false);
-
-
-		}
 	}
 }
